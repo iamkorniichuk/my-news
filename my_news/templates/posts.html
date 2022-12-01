@@ -1,7 +1,7 @@
 {% extends "base.html" %}
 {% block content %}
     {% for post in posts %}
-        <div>
+        <div class="clickable" onclick="onPostClick('{{ post.id }}')" style="border: solid black 1px">
             <small>{{ post.user_login }}</small>
             <b>{{ post.title }}</b>
             <p>{{ post.body }}</p>

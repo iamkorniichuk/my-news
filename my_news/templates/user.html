@@ -1,0 +1,15 @@
+{% extends "base.html" %}
+{% block content %}
+    <div>
+        <img src="{{ user.image }}">
+        <h1>
+            {% if user.first_name %}
+                {{ user.first_name }}
+            {% endif %}
+            {% if user.last_name %}
+                {{ user.last_name }}
+            {% endif %}
+        </h1>
+        <small>{{ user.login }}</small>
+    </div>
+{% endblock content %}

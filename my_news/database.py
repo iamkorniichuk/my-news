@@ -10,11 +10,14 @@ __connect = mysql.connect(
 __cursor = __connect.cursor(dictionary=True)
 
 
-def selectall(table, conditions_dict=None):
+def selectall(table, conditions_dict=None, order_dict=None):
     query = f'SELECT * FROM {table}'
     if conditions_dict:
         conditions = __convert_to_conditions(conditions_dict)
         query += f' WHERE {conditions}'
+    if order_dict:
+        order = __convert_to_order(order_dict)
+        query += f' ORDER BY {order}'
     __executeone(query, commit=False)
     return __cursor.fetchall()
 
@@ -51,6 +54,18 @@ def __executeone(query, commit=True):
 #     __cursor.reset()
 #     __cursor.executemany(query)
 #     __connect.commit()
+
+def __convert_to_order(dict):
+    if 'key' in dict.keys():
+        order_by_string = dict['key']
+    else:
+        order_by_list = []
+        for key in dict['keys']:
+            order_by_list.append(key)
+        order_by_string = ', '.join(order_by_list)
+    order = 'ASC' if dict['reverse'] else 'DESC'
+    return order_by_string + ' ' + order
+
 
 def __convert_to_set(dict):
     list = []

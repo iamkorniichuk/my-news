@@ -8,6 +8,10 @@ class BaseModel:
         self._id = id
 
 
+    def getallinorder(self, order, **kwargs):
+        return database.selectall(self._table, kwargs, order)
+
+
     def getall(self, **kwargs):
         return database.selectall(self._table, kwargs)
 

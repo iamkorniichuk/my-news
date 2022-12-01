@@ -6,14 +6,8 @@ from functools import wraps
 def login_required(func):
     @wraps(func)
     def wrapper():
-        if 'user' in session:
-            user = session['user']
-            login = user['login']
-            password = user['password']
-            if users_model.auth(login, password):
-                return func()
-            else:
-                return redirect(url_for('auth.logout'))
+        if is_logged():
+            return func()
         else:
             return redirect(url_for('auth.login'))
     return wrapper
@@ -22,3 +16,13 @@ def login_required(func):
 def add_session_user(login, password):
     session.permanent = True
     session['user'] = {'login': login, 'password': password}
+
+
+def is_logged():
+    if 'user' in session:
+        user = session['user']
+        login = user['login']
+        password = user['password']
+        return users_model.auth(login, password)
+    else:
+        return False

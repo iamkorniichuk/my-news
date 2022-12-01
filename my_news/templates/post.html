@@ -1,0 +1,9 @@
+{% extends "base.html" %}
+{% block content %}
+    <div>
+        <small class="clickable" onclick="onUserClick('{{ post.user_login }}')">{{ post.user_login }}</small>
+        <b>{{ post.title }}</b>
+        <p>{{ post.body }}</p>
+        <small>{{ post.posted_time }}</small>
+    </div>
+{% endblock content %}
