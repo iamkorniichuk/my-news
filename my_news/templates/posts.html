@@ -3,6 +3,9 @@
     {% for post in posts %}
         <div class="clickable" onclick="onPostClick('{{ post.id }}')" style="border: solid black 1px">
             <small>{{ post.user_login }}</small>
+            <div>
+                <img height="300px" src="{{ posts_file(post.cover) }}" alt="Cover">
+            </div>
             <b>{{ post.title }}</b>
             <p>{{ post.body }}</p>
             <small>{{ post.posted_time }}</small>

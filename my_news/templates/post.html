@@ -2,6 +2,9 @@
 {% block content %}
     <div>
         <small class="clickable" onclick="onUserClick('{{ post.user_login }}')">{{ post.user_login }}</small>
+        <div>
+            <img height="300px" src="{{ posts_file(post.cover) }}" alt="Cover">
+        </div>
         <b>{{ post.title }}</b>
         <p>{{ post.body }}</p>
         <small>{{ post.posted_time }}</small>

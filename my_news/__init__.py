@@ -1,16 +1,17 @@
 from flask import Flask
 from datetime import timedelta
-from my_news.utils import is_logged
+from .configs import *
+from my_news.utils import is_logged, is_logged_user, posts_file, users_file
 
 
 def create_app():
     app = Flask(__name__)
     app.permanent_session_lifetime = timedelta(days=15)
-    app.config.update(
-        TESTING=True,
-        SECRET_KEY='password'
-    )
+    app.config.from_mapping(**App().development)
     app.jinja_env.globals['is_logged'] = is_logged
+    app.jinja_env.globals['is_logged_user'] = is_logged_user
+    app.jinja_env.globals['posts_file'] = posts_file
+    app.jinja_env.globals['users_file'] = users_file
 
 
     from .routes.auth import auth

@@ -1,5 +1,5 @@
 from flask import Blueprint, render_template, session, redirect, url_for
-from my_news.forms.auth import LoginForm, SignupForm
+from my_news.forms import LoginForm, SignupForm
 from my_news.models.users import users_model
 from my_news.utils import add_session_user, login_required
 
@@ -11,7 +11,6 @@ auth = Blueprint('auth', __name__)
 def login():
     form = LoginForm()
     if form.validate_on_submit():
-        # TODO: add session
         login = form.login.data
         password = form.password.data
         if users_model.auth(login, password):
@@ -24,7 +23,6 @@ def login():
 def signup():
     form = SignupForm()
     if form.validate_on_submit():
-        # TODO: add session
         email = form.email.data
         login = form.login.data
         password = form.password.data

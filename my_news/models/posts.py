@@ -13,7 +13,7 @@ class PostsModel(BaseModel):
 
     def _cut_posts_body(self, posts):
         for post in posts:
-            post['body'] = post['body'][:post['body'].rindex('.', 0, 100)]+'...'
+            post['body'] = post['body'][:post['body'].rindex('.', 0, 100)] + '...'
         return posts
 
 

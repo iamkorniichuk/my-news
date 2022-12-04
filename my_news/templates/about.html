@@ -3,13 +3,10 @@
     {% for review in reviews %}
         <div style="border: solid black 1px">
             <h4>
-                <b class="clickable" onclick="onUserClick('{{ review.user_login }}')">{{ review.user_login }}
-                    {% for i in range(review.stars) %}
-                    ★
-                    {% endfor %}
-                </b>
-                <p>{{ review.body }}</p>
+                <div class="clickable" onclick="onUserClick('{{ review.user_login }}')">{{ review.user_login }}</div>
+                {% for i in range(review.stars) %}★{% endfor %}{% for i in range(5-review.stars) %}☆{% endfor %}
             </h4>
+            <p>{{ review.body }}</p>
         </div>
     {% endfor %}
 {% endblock content %}

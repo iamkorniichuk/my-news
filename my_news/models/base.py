@@ -2,7 +2,6 @@ from my_news import database
 
 
 class BaseModel:
-    # TODO: Rethink implementation of model
     def __init__(self, table, id):
         self._table = table
         self._id = id

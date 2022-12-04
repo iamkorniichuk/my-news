@@ -4,8 +4,8 @@
     <meta charset="UTF-8">
     <title>{{ title }}</title>
     <!-- if script passed, write -->
-    <script src="../static/scripts/script.js"></script>
-    <link rel="stylesheet" href="../static/style.css">
+    <script src="{{ url_for('static', filename='script.js') }}"></script>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
     {% block script %} {% endblock script %}
 </head>
 <body>
@@ -15,7 +15,7 @@
         <a href="{{ url_for('users.all') }}">Users</a>
         <a href="{{ url_for('about.info') }}">About</a>
         {% if is_logged() %}
-                <a href="{{ url_for('auth.logout') }}">Log Out</a>
+                <a href="{{ url_for('users.me') }}">Account</a>
         {% else %}
                 <a href="{{ url_for('auth.login') }}">Log In</a>
                 <a href="{{ url_for('auth.signup') }}">Sign Up</a>

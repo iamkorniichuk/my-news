@@ -1,7 +1,7 @@
 {% extends "base.html" %}
 {% block content %}
     <div>
-        <img src="{{ user.image }}">
+        <img src="{{ users_file(user.image) }}" alt="Image">
         <h1>
             {% if user.first_name %}
                 {{ user.first_name }}
@@ -11,5 +11,13 @@
             {% endif %}
         </h1>
         <small>{{ user.login }}</small>
+        {% if is_logged_user(user) %}
+            <div>
+                <a href="{{ url_for('auth.logout') }}">Log out</a>
+            </div>
+            <div>
+                <button onclick="OnEditAccountClick()">Edit account</button>
+            </div>
+        {% endif %}
     </div>
 {% endblock content %}

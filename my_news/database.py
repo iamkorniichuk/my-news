@@ -1,13 +1,15 @@
 import mysql.connector as mysql
+from .configs import Database
 
 
 __connect = mysql.connect(
-     host='localhost',
-     database='my_news',
-     user='root',
-     password=''
+     **Database().development
      )
 __cursor = __connect.cursor(dictionary=True)
+
+
+def selectall_linked(table, linked_tables_list, conditions_dict=None, order_dict=None):
+    pass
 
 
 def selectall(table, conditions_dict=None, order_dict=None):
@@ -30,7 +32,7 @@ def selectone(table, conditions_dict):
 
 def insertone(table, columns_values_dict):
     columns, values = __convert_to_columns_values(columns_values_dict)
-    __executeone(f'INSERT INTO {table} ({columns}) VALUES ({values})')
+    __executeone(f'INSERT INTO {table} {columns} VALUES {values}')
 
 
 def update(table, set_dict, conditions_dict):

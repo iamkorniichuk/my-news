@@ -3,6 +3,7 @@
     {% for user in users %}
         <div class="clickable" onclick="onUserClick('{{ user.login }}')" style="border: solid black 1px">
             <b>{{ user.login }}</b>
+            <img src="{{ users_file(user.image) }}" alt="Image">
         </div>
     {% endfor %}
 {% endblock content %}
