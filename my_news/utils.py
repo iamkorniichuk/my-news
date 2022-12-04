@@ -62,5 +62,4 @@ def is_logged():
         login = user['login']
         password = user['password']
         return users_model.auth(login, password)
-    else:
-        return False
+    return False

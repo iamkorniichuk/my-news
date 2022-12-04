@@ -22,4 +22,9 @@
         {{ form.submit }}
     </div>
 </form>
+<div>
+    <form method="post" action="{{ url_for('users.delete') }}">
+        <button type="submit">Delete</button>
+    </form>
+</div>
 {% endblock content %}

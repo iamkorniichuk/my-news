@@ -32,7 +32,7 @@ def signup():
     return render_template('signup.html', title='Sign Up', form=form)
 
 
-@auth.route('/logout')
+@auth.route('/logout', methods=['POST', 'GET'])
 @login_required
 def logout():
     session.pop('user', None)

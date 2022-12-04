@@ -18,7 +18,9 @@ class UsersModel(BaseModel):
 
     def auth(self, login, password):
         user = self.getone(login)
-        return sha512(password.encode('utf-8')).hexdigest() == user['password']
+        if user:
+            return sha512(password.encode('utf-8')).hexdigest() == user['password']
+        return False
 
 
 users_model = UsersModel()

@@ -8,7 +8,3 @@ function onPostClick(id){
 function onUserClick(login){
     window.location.href = URL + "user/" + login;
 }
-
-function OnEditAccountClick(){
-    window.location.href = URL + "account/edit";
-}

@@ -10,15 +10,14 @@
 </head>
 <body>
     <nav>
-        <!--TO END-->
         <a href="{{ url_for('posts.all') }}">News</a>
         <a href="{{ url_for('users.all') }}">Users</a>
         <a href="{{ url_for('about.info') }}">About</a>
         {% if is_logged() %}
-                <a href="{{ url_for('users.me') }}">Account</a>
+            <a href="{{ url_for('users.me') }}">Account</a>
         {% else %}
-                <a href="{{ url_for('auth.login') }}">Log In</a>
-                <a href="{{ url_for('auth.signup') }}">Sign Up</a>
+            <a href="{{ url_for('auth.login') }}">Log In</a>
+            <a href="{{ url_for('auth.signup') }}">Sign Up</a>
         {% endif %}
     </nav>
     {% block content %}

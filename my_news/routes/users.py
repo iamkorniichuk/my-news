@@ -47,3 +47,10 @@ def edit():
     form.last_name.data = logged_user()['last_name']
     form.description.data = logged_user()['description']
     return render_template('edit_account.html', title='Edit Account', form=form)
+
+
+@users.route('/account/delete', methods=['POST'])
+@login_required
+def delete():
+    users_model.delete(logged_user()['login'])
+    return redirect(url_for('auth.logout'), code=307)
