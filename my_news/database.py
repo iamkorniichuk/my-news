@@ -8,10 +8,6 @@ __connect = mysql.connect(
 __cursor = __connect.cursor(dictionary=True)
 
 
-def selectall_linked(table, linked_tables_list, conditions_dict=None, order_dict=None):
-    pass
-
-
 def selectall(table, conditions_dict=None, order_dict=None):
     query = f'SELECT * FROM {table}'
     if conditions_dict:
@@ -92,12 +88,12 @@ def __convert_to_columns_values(dict):
 
 
 def __set_bracket(str):
-    return '(' + str + ')'
+    return f'({str})'
 
 
 def __column_quote(str):
-    return '`' + str + '`'
+    return f'`{str}`'
 
 
 def __value_quote(str):
-    return '"' + str + '"'
+    return f'"{str}"'

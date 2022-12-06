@@ -9,4 +9,18 @@
         <p>{{ post.body }}</p>
         <small>{{ post.posted_time }}</small>
     </div>
+    {% if is_its_account(post.user_login) %}
+    <div>
+        <form action="{{ url_for('posts.edit', id=post.id) }}">
+            <button type="submit">Edit</button>
+        </form>
+    </div>
+    {% endif %}
+    {% for comment in comments %}
+    <div style="border: solid black 1px">
+        <small class="clickable" onclick="onUserClick('{{ comment.user_login }}')">{{ comment.user_login }}</small>
+        <p>{{ comment.body }}</p>
+        <small>{{ comment.posted_time }}</small>
+    </div>
+    {% endfor %}
 {% endblock content %}

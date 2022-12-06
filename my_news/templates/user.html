@@ -11,15 +11,25 @@
             {% endif %}
         </h1>
         <small>{{ user.login }}</small>
-        {% if is_logged_user(user) %}
-            <div>
-                <a href="{{ url_for('auth.logout') }}">Log out</a>
-            </div>
-            <div>
-                <form action="{{ url_for('users.edit') }}">
-                    <button type="submit">Edit</button>
-                </form>
-            </div>
-        {% endif %}
     </div>
+    {% if is_its_account(user.login) %}
+        <div>
+            <a href="{{ url_for('auth.logout') }}">Log out</a>
+        </div>
+        <div>
+            <form action="{{ url_for('users.edit') }}">
+                <button type="submit">Edit</button>
+            </form>
+        </div>
+    {% endif %}
+    {% for post in posts %}
+        <div style="border: solid black 1px" class="clickable" onclick="onPostClick('{{ post.id }}')" style="border: solid black 1px">
+            <div>
+                <img height="300px" src="{{ posts_file(post.cover) }}" alt="Cover">
+            </div>
+            <b>{{ post.title }}</b>
+            <p>{{ post.body }}</p>
+            <small>{{ post.posted_time }}</small>
+        </div>
+    {% endfor %}
 {% endblock content %}

@@ -1,7 +1,9 @@
 from flask import Blueprint, render_template, redirect, url_for
 from my_news.forms import EditAccountForm
-from my_news.utils import login_required, logged_user, save_file, USERS_FOLDER
+from my_news.utils.session import login_required, logged_user
+from my_news.utils.files import save_file, USERS_FOLDER
 from my_news.models.users import users_model
+from my_news.models.posts import posts_model
 
 
 users = Blueprint('users', __name__)
@@ -17,14 +19,15 @@ def all():
 def one(login):
     # TODO: To end
     oneuser = users_model.getone(login)
-    return render_template('user.html', title=oneuser['login'], user=oneuser)
+    allposts = posts_model.getallinorder({'key':'posted_time', 'reverse':False}, user_login=login)
+    return render_template('user.html', title=oneuser['login'], user=oneuser, posts=allposts)
     
 
 @users.route('/account/')
 @login_required
 def me():
-    user = logged_user()
-    return render_template('user.html', title=user['login'], user=user)
+    oneuser = logged_user()
+    return render_template('user.html', title=oneuser['login'], user=oneuser)
 
 
 @users.route('/account/edit', methods=['POST', 'GET'])
