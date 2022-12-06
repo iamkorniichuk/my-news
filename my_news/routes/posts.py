@@ -1,9 +1,9 @@
 from flask import Blueprint, render_template, redirect, url_for
-from my_news.forms import CreatePostForm
+from my_news.forms import CreatePostForm, CreateCommentForm
 from my_news.models.posts import posts_model
 from my_news.models.comments import comments_model
 from my_news.utils.session import login_required, logged_user
-from my_news.utils.files import save_file, POSTS_FOLDER
+from my_news.utils.files import save_file, posts_folder
 
 
 posts = Blueprint('posts', __name__)
@@ -16,11 +16,17 @@ def all():
     return render_template('posts.html', title='News', posts=allposts)
 
 
-@posts.route('/post/<int:id>')
+@posts.route('/post/<int:id>', methods=['POST', 'GET'])
 def one(id):
+    form = CreateCommentForm()
     onepost = posts_model.getone(id)
     allcomments = comments_model.getallinorder({'key':'posted_time', 'reverse':False}, post_id=id)
-    return render_template('post.html', title=onepost['title'], post=onepost, comments=allcomments)
+    if form.validate_on_submit():
+        comments_model.add(user_login=logged_user()['login'],
+                            post_id=id,
+                            body=form.body.data)
+        return redirect(url_for('posts.one', id=id), code=302)
+    return render_template('post.html', title=onepost['title'], post=onepost, form=form, comments=allcomments)
 
 
 @posts.route('/post/create', methods=['POST', 'GET'])
@@ -28,9 +34,8 @@ def one(id):
 def create():
     form = CreatePostForm()
     if form.validate_on_submit():
-        # TODO: Check uniqueness
         posts_model.add(user_login=logged_user()['login'],
-                        cover=save_file(form.cover.data, POSTS_FOLDER),
+                        cover=save_file(form.cover.data, posts_folder()),
                         title=form.title.data,
                         body=form.body.data)
         return redirect(url_for('posts.all'))
@@ -43,9 +48,8 @@ def edit(id):
     form = CreatePostForm()
     onepost = posts_model.getone(id)
     if form.validate_on_submit():
-        # TODO: Check uniqueness
         posts_model.update(id, user_login=logged_user()['login'],
-                        cover=save_file(form.cover.data, POSTS_FOLDER),
+                        cover=save_file(form.cover.data, posts_folder()),
                         title=form.title.data,
                         body=form.body.data)
         return redirect(url_for('posts.one', id=id))

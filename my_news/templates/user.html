@@ -1,7 +1,7 @@
 {% extends "base.html" %}
 {% block content %}
     <div>
-        <img src="{{ users_file(user.image) }}" alt="Image">
+        <img class="pfp" src="{{ users_folder(user.image) }}" alt="Image">
         <h1>
             {% if user.first_name %}
                 {{ user.first_name }}
@@ -25,7 +25,7 @@
     {% for post in posts %}
         <div style="border: solid black 1px" class="clickable" onclick="onPostClick('{{ post.id }}')" style="border: solid black 1px">
             <div>
-                <img height="300px" src="{{ posts_file(post.cover) }}" alt="Cover">
+                <img height="300px" src="{{ posts_folder(post.cover) }}" alt="Cover">
             </div>
             <b>{{ post.title }}</b>
             <p>{{ post.body }}</p>

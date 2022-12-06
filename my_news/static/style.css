@@ -1,3 +1,15 @@
 .clickable{
     cursor: pointer;
 }
+
+.thumbnail{
+    max-height: 20vh;
+}
+
+.cover{
+    max-height: 50vh;
+}
+
+.pfp{
+    height: 200px;
+}

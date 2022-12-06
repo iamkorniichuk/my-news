@@ -1,7 +1,7 @@
 from flask import Blueprint, render_template, redirect, url_for
 from my_news.forms import EditAccountForm
 from my_news.utils.session import login_required, logged_user
-from my_news.utils.files import save_file, USERS_FOLDER
+from my_news.utils.files import save_file, users_folder
 from my_news.models.users import users_model
 from my_news.models.posts import posts_model
 
@@ -40,7 +40,7 @@ def edit():
             if not field.data or field.name == 'submit' or field.name == 'csrf_token':
                 continue
             if field.name == 'image':
-                data['image'] = save_file(field.data, USERS_FOLDER)
+                data['image'] = save_file(field.data, users_folder())
                 continue
             data[field.name] = field.data
         users_model.update(logged_user()['login'], **data)

@@ -48,3 +48,8 @@ class EditAccountForm(FlaskForm):
     last_name = StringField('Last name')
     description = TextAreaField('Description')
     submit = SubmitField('Edit')
+
+
+class CreateCommentForm(FlaskForm):
+    body = TextAreaField('Body', [DataRequired()])
+    submit = SubmitField('Comment')

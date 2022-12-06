@@ -2,7 +2,7 @@ from flask import Flask
 from datetime import timedelta
 from .configs import *
 from my_news.utils.session import is_logged, is_its_account
-from my_news.utils.files import posts_file, users_file
+from my_news.utils.files import posts_folder, users_folder
 
 
 def create_app():
@@ -11,8 +11,8 @@ def create_app():
     app.config.from_mapping(**App().development)
     app.jinja_env.globals['is_logged'] = is_logged
     app.jinja_env.globals['is_its_account'] = is_its_account
-    app.jinja_env.globals['posts_file'] = posts_file
-    app.jinja_env.globals['users_file'] = users_file
+    app.jinja_env.globals['posts_folder'] = posts_folder
+    app.jinja_env.globals['users_folder'] = users_folder
 
 
     from .routes.auth import auth

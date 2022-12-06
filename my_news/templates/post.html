@@ -3,24 +3,41 @@
     <div>
         <small class="clickable" onclick="onUserClick('{{ post.user_login }}')">{{ post.user_login }}</small>
         <div>
-            <img height="300px" src="{{ posts_file(post.cover) }}" alt="Cover">
+            <img class="cover" src="{{ posts_folder(post.cover) }}" alt="Cover">
         </div>
         <b>{{ post.title }}</b>
         <p>{{ post.body }}</p>
         <small>{{ post.posted_time }}</small>
     </div>
     {% if is_its_account(post.user_login) %}
-    <div>
-        <form action="{{ url_for('posts.edit', id=post.id) }}">
-            <button type="submit">Edit</button>
+        <div>
+            <form action="{{ url_for('posts.edit', id=post.id) }}">
+                <button type="submit">Edit</button>
+            </form>
+        </div>
+    {% endif %}
+    {% if is_logged() %}
+        <form method="POST" enctype="multipart/form-data">
+            {{ form.hidden_tag() }}
+            <div>
+                {{ form.body.label }}
+                {{ form.body }}
+            </div>
+            <div>
+                {{ form.submit }}
+            </div>
         </form>
-    </div>
     {% endif %}
     {% for comment in comments %}
-    <div style="border: solid black 1px">
-        <small class="clickable" onclick="onUserClick('{{ comment.user_login }}')">{{ comment.user_login }}</small>
-        <p>{{ comment.body }}</p>
-        <small>{{ comment.posted_time }}</small>
-    </div>
+        <div style="border: solid black 1px">
+            <small class="clickable" onclick="onUserClick('{{ comment.user_login }}')">{{ comment.user_login }}</small>
+            <p>{{ comment.body }}</p>
+            <small>{{ comment.posted_time }}</small>
+            {% if is_its_account(comment.user_login) %}
+            <div>
+                <button type="submit">Edit</button>
+            </div>
+        {% endif %}
+        </div>
     {% endfor %}
 {% endblock content %}
