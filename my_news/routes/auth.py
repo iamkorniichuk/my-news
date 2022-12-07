@@ -14,7 +14,7 @@ def login():
         login = form.login.data
         password = form.password.data
         if users_model.auth(login, password):
-            add_session_user(login, password)
+            add_session_user(login)
             return redirect(url_for('posts.all'))
     return render_template('login.html', title='Log In', form=form)
 
@@ -27,7 +27,7 @@ def signup():
         login = form.login.data
         password = form.password.data
         users_model.add(email=email, login=login, password=password)
-        add_session_user(login, password)
+        add_session_user(login)
         return redirect(url_for('posts.all'))
     return render_template('signup.html', title='Sign Up', form=form)
 

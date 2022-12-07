@@ -1,5 +1,6 @@
 from flask import url_for, current_app
 from glob import glob
+import os
 import secrets
 
 
@@ -23,14 +24,15 @@ def save_file(file, folder):
     return name
 
 
+def delete_file(file, folder):
+    path = current_app.root_path + folder + file
+    if os.path.exists(path) and file:
+        os.chmod(path, 0o777)
+        os.remove(path)
+
+
 def get_unique_filename(folder):
-    pathes = glob(folder)
-    filenames = []
-    for path in pathes:
-        filenames.append(path[path.rindex('/'):])
-    print(filenames)
     name = secrets.token_hex(16)
-    while name in filenames:
+    while os.path.exists(folder + name):
         name = secrets.token_hex(16)
-    print(name)
     return name

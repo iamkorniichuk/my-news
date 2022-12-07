@@ -25,9 +25,9 @@ def login_required(func):
     return wrapper
 
 
-def add_session_user(login, password):
+def add_session_user(login):
     session.permanent = True
-    session['user'] = {'login': login, 'password': password}
+    session['user'] = users_model.getone(login)
 
 
 def is_logged():
@@ -35,5 +35,7 @@ def is_logged():
         user = session['user']
         login = user['login']
         password = user['password']
-        return users_model.auth(login, password)
+        user = users_model.getone(login)
+        if user:
+            return password == user['password']
     return False
