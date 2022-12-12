@@ -1,9 +1,9 @@
 import mysql.connector as mysql
-from .configs import Database
+from .configs import database_development
 
 
 __connect = mysql.connect(
-     **Database().development
+     **database_development
      )
 __cursor = __connect.cursor(dictionary=True)
 

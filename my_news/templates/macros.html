@@ -1,0 +1,21 @@
+{% macro render_form(form) %}
+    <form method="POST" enctype="multipart/form-data">
+        {{ form.hidden_tag() }}
+        {% for field in form %}
+            {% if isinstance(field, service_fields) %}
+                {{ field }}
+                {{ continue }}
+            {% else %}
+                {% if field.errors %}
+                    <div style="background-color: red; color: white">
+                        {{ field.errors }}
+                    </div>
+                {% endif %}
+                <div>
+                    {{ field.label }}
+                    {{ field }}
+                </div>
+            {% endif %}
+        {% endfor %}
+    </form>
+{% endmacro %}

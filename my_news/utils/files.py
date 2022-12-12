@@ -1,5 +1,4 @@
 from flask import url_for, current_app
-from glob import glob
 import os
 import secrets
 
@@ -29,6 +28,11 @@ def delete_file(file, folder):
     if os.path.exists(path) and file:
         os.chmod(path, 0o777)
         os.remove(path)
+
+
+def replace_file(old, new, folder):
+    delete_file(old, folder)
+    return save_file(new, folder)
 
 
 def get_unique_filename(folder):

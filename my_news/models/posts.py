@@ -1,6 +1,6 @@
 from .base import BaseModel
 
-
+# TODO: CAN'T DELETE IF THERE ARE COMMENTS
 class PostsModel(BaseModel):
     def __init__(self):
         super().__init__('posts', 'id')

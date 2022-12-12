@@ -1,5 +1,5 @@
 from flask import Blueprint, render_template, session, redirect, url_for
-from my_news.forms import LoginForm, SignupForm
+from .forms import *
 from my_news.models.users import users_model
 from my_news.utils.session import add_session_user, login_required
 
