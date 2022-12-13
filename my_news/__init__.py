@@ -1,7 +1,7 @@
 from flask import Flask
 from datetime import timedelta
 from .configs import *
-from my_news.utils.session import is_fresh_logged, is_its_account
+from my_news.utils.session import is_logged, is_its_account
 from my_news.utils.files import posts_folder, users_folder
 from my_news.utils.forms import service_fields
 
@@ -14,7 +14,7 @@ def create_app():
     
     app.jinja_env.globals['service_fields'] = service_fields
     app.jinja_env.globals['isinstance'] = isinstance
-    app.jinja_env.globals['is_logged'] = is_fresh_logged
+    app.jinja_env.globals['is_logged'] = is_logged
     app.jinja_env.globals['is_its_account'] = is_its_account
     app.jinja_env.globals['posts_folder'] = posts_folder
     app.jinja_env.globals['users_folder'] = users_folder

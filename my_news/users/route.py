@@ -18,7 +18,6 @@ def all():
 
 @users.route('/user/<login>')
 def one(login):
-    # TODO: To end
     user = users_model.getone(login)
     posts = posts_model.getallinorder({'key':'posted_time', 'reverse':False}, user_login=login)
     return render_template('user.html', title=user['login'], user=user, posts=posts)

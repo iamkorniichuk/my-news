@@ -1,8 +1,8 @@
-from flask import Blueprint, render_template, redirect, url_for
+from flask import Blueprint, render_template, redirect, url_for, abort
 from .forms import *
 from my_news.models.posts import posts_model
 from my_news.models.comments import comments_model
-from my_news.utils.session import login_required, logged_user
+from my_news.utils.session import login_required, logged_user, is_its_account
 from my_news.utils.files import save_file, posts_folder, delete_file, replace_file
 from my_news.utils.forms import set_values_to_form, get_values_from_form
 
@@ -42,23 +42,24 @@ def create():
     return render_template('create_post.html', title='Create', form=form)
 
 
-# TODO: CAN EDIT BY ANOTHER USER BY ENTERING URL
 @posts.route('/post/edit/<int:id>', methods=['POST', 'GET'])
 @login_required
 def edit(id):
     # TODO: Dealt with edit/create form (create one or rename)
     form = CreatePostForm()
     post = posts_model.getone(id)
-    if form.validate_on_submit():
-        values = get_values_from_form(form)
-        old_cover = post['cover']
-        new_cover = values['cover']
-        values['cover'] = replace_file(old_cover, new_cover, posts_folder())
-        # TODO: Refresh info in session | Will it be better if use caching?
-        posts_model.update(id, **values)
-        return redirect(url_for('posts.one', id=id))
-    set_values_to_form(form, post)
-    return render_template('edit_post.html', title='Edit', form=form, id=id)
+    if is_its_account(post['user_login']):
+        if form.validate_on_submit():
+            values = get_values_from_form(form)
+            old_cover = post['cover']
+            new_cover = values['cover']
+            values['cover'] = replace_file(old_cover, new_cover, posts_folder())
+            # TODO: Refresh info in session | Will it be better if use caching?
+            posts_model.update(id, **values)
+            return redirect(url_for('posts.one', id=id))
+        set_values_to_form(form, post)
+        return render_template('edit_post.html', title='Edit', form=form, id=id)
+    abort(403)
 
 
 @posts.route('/comment/edit/<int:id>', methods=['POST', 'GET'])
@@ -67,26 +68,32 @@ def edit_comment(id):
     # TODO: Dealt with edit/create form (create one or rename)
     form = CreateCommentForm()
     comment = comments_model.getone(id)
-    if form.validate_on_submit():
-        values = get_values_from_form(form)
-        comments_model.update(id, **values)
-        return redirect(url_for('posts.one', id=comment['post_id']))
-    set_values_to_form(form, comment)
-    return render_template('edit_comment.html', title='Edit', form=form, id=id)
+    if is_its_account(comment['user_login']):
+        if form.validate_on_submit():
+            values = get_values_from_form(form)
+            comments_model.update(id, **values)
+            return redirect(url_for('posts.one', id=comment['post_id']))
+        set_values_to_form(form, comment)
+        return render_template('edit_comment.html', title='Edit', form=form, id=id)
+    abort(403)
 
 
 @posts.route('/comment/delete/<int:id>', methods=['POST'])
 @login_required
 def delete_comment(id):
     comment = comments_model.getone(id)
-    comments_model.delete(id)
-    return redirect(url_for('posts.one', id=comment['post_id']))
+    if is_its_account(comment['user_login']):
+        comments_model.delete(id)
+        return redirect(url_for('posts.one', id=comment['post_id']))
+    abort(403)
 
 
 @posts.route('/post/delete/<int:id>', methods=['POST'])
 @login_required
 def delete(id):
     post = posts_model.getone(id)
-    delete_file(post['cover'], posts_folder())
-    posts_model.delete(id)
-    return redirect(url_for('posts.all'))
+    if is_its_account(post['user_login']):
+        delete_file(post['cover'], posts_folder())
+        posts_model.delete(id)
+        return redirect(url_for('posts.all'))
+    abort(403)

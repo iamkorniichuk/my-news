@@ -1,8 +1,8 @@
-from flask import Blueprint, render_template, redirect, url_for
+from flask import Blueprint, render_template, redirect, url_for, abort
 from my_news.models.reviews import reviews_model
 from .forms import *
 from my_news.utils.forms import set_values_to_form, get_values_from_form
-from my_news.utils.session import login_required, logged_user
+from my_news.utils.session import login_required, logged_user, is_its_account
 
 
 about = Blueprint('about', __name__)
