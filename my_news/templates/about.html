@@ -1,5 +1,10 @@
 {% extends "base.html" %}
 {% block content %}
+    {% if is_logged() %}
+        <div>
+            <a href="{{ url_for('about.create') }}">Create</a>
+        </div>
+    {% endif %}
     {% for review in reviews %}
         <div style="border: solid black 1px">
             <h4>

@@ -21,15 +21,18 @@
         {{ render_form(form) }}
     {% endif %}
     {% for comment in comments %}
+        
         <div style="border: solid black 1px">
             <small class="clickable" onclick="onUserClick('{{ comment.user_login }}')">{{ comment.user_login }}</small>
             <p>{{ comment.body }}</p>
             <small>{{ comment.posted_time }}</small>
             {% if is_its_account(comment.user_login) %}
             <div>
-                <button type="submit">Edit</button>
+                <form action="{{ url_for('posts.edit_comment', id=comment.id) }}">
+                    <button type="submit">Edit</button>
+                </form>
             </div>
-        {% endif %}
+            {% endif %}
         </div>
     {% endfor %}
 {% endblock content %}

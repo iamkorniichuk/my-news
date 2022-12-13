@@ -26,7 +26,7 @@ def one(id):
         comments_model.add(user_login=logged_user()['login'],
                             post_id=id,
                             body=form.body.data)
-        return redirect(url_for('posts.one', id=id), code=302)
+        return redirect(url_for('posts.one', id=id))
     return render_template('post.html', title=post['title'], post=post, form=form, comments=comments)
 
 
@@ -61,10 +61,32 @@ def edit(id):
     return render_template('edit_post.html', title='Edit', form=form, id=id)
 
 
+@posts.route('/comment/edit/<int:id>', methods=['POST', 'GET'])
+@login_required
+def edit_comment(id):
+    # TODO: Dealt with edit/create form (create one or rename)
+    form = CreateCommentForm()
+    comment = comments_model.getone(id)
+    if form.validate_on_submit():
+        values = get_values_from_form(form)
+        comments_model.update(id, **values)
+        return redirect(url_for('posts.one', id=comment['post_id']))
+    set_values_to_form(form, comment)
+    return render_template('edit_comment.html', title='Edit', form=form, id=id)
+
+
+@posts.route('/comment/delete/<int:id>', methods=['POST'])
+@login_required
+def delete_comment(id):
+    comment = comments_model.getone(id)
+    comments_model.delete(id)
+    return redirect(url_for('posts.one', id=comment['post_id']))
+
+
 @posts.route('/post/delete/<int:id>', methods=['POST'])
 @login_required
 def delete(id):
     post = posts_model.getone(id)
     delete_file(post['cover'], posts_folder())
     posts_model.delete(id)
-    return redirect(url_for('posts.all'), code=302)
+    return redirect(url_for('posts.all'))

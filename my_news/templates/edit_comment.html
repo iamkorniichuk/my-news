@@ -1,0 +1,8 @@
+{% extends "create_post.html" %}
+{% block delete %}
+<div>
+    <form method="post" action="{{ url_for('posts.delete_comment', id=id) }}">
+        <button type="submit">Delete</button>
+    </form>
+</div>
+{% endblock delete %}
