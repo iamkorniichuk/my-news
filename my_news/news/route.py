@@ -1,0 +1,100 @@
+from flask import Blueprint, render_template, redirect, request, url_for, abort
+from .forms import *
+from my_news.models.news import news_model
+from my_news.models.comments import comments_model
+from my_news.utils.session import login_required, logged_user, is_its_account, admin_required
+from my_news.utils.files import save_file, news_folder, delete_file, replace_file
+from my_news.utils.forms import set_values_to_form, get_values_from_form
+
+
+news = Blueprint('news', __name__)
+
+
+@news.route('/')
+@news.route('/news')
+def all():
+    news = news_model.getall({'key':'posted_time', 'reverse':False})
+    return render_template('news.html', title='News', news=news)
+
+
+@news.route('/news/<int:id>', methods=['POST', 'GET'])
+def one(id):
+    form = CreateCommentForm()
+    news = news_model.getone(id)
+    comments = comments_model.getall({'key':'posted_time', 'reverse':False}, news_id=id)
+    if form.validate_on_submit():
+        comments_model.add(user_login=logged_user()['login'],
+                            news_id=id,
+                            body=form.body.data)
+        return redirect(url_for('news.one', id=id))
+    return render_template('one_news.html', title=news['title'], news=news, form=form, comments=comments)
+
+
+@news.route('/news/create', methods=['POST', 'GET'])
+@admin_required
+def create():
+    form = CreateNewsForm()
+    if form.validate_on_submit():
+        values = get_values_from_form(form)
+        values['user_login'] = logged_user()['login']
+        values['cover'] = save_file(values['cover'], news_folder())
+        news_model.add(**values)
+        return redirect(url_for('news.all'))
+    return render_template('create_news.html', title='Create', form=form)
+
+
+@news.route('/news/edit/<int:id>', methods=['POST', 'GET'])
+@admin_required
+def edit(id):
+    # TODO: Dealt with edit/create form (create one or rename)
+    form = CreateNewsForm()
+    post = news_model.getone(id)
+    if is_its_account(post['user_login']):
+        if form.validate_on_submit():
+            values = get_values_from_form(form)
+            old_cover = post['cover']
+            new_cover = values['cover']
+            values['cover'] = replace_file(old_cover, new_cover, news_folder())
+            # TODO: Refresh info in session | Will it be better if use caching?
+            news_model.update(id, **values)
+            return redirect(url_for('news.one', id=id))
+        set_values_to_form(form, post)
+        return render_template('edit_post.html', title='Edit', form=form, id=id)
+    abort(403)
+
+
+@news.route('/comment/edit/<int:id>', methods=['POST', 'GET'])
+@login_required
+def edit_comment(id):
+    # TODO: Dealt with edit/create form (create one or rename)
+    form = CreateCommentForm()
+    comment = comments_model.getone(id)
+    if is_its_account(comment['user_login']):
+        if form.validate_on_submit():
+            values = get_values_from_form(form)
+            comments_model.update(id, **values)
+            return redirect(url_for('news.one', id=comment['post_id']))
+        set_values_to_form(form, comment)
+        return render_template('edit_comment.html', title='Edit', form=form, id=id)
+    abort(403)
+
+
+@news.route('/comment/delete/<int:id>', methods=['POST'])
+@login_required
+def delete_comment(id):
+    comment = comments_model.getone(id)
+    if is_its_account(comment['user_login']):
+        comments_model.delete(id)
+        return redirect(url_for('news.one', id=comment['post_id']))
+    abort(403)
+
+
+@news.route('/news/delete/<int:id>', methods=['POST'])
+@admin_required
+def delete(id):
+    post = news_model.getone(id)
+    if is_its_account(post['user_login']):
+        delete_file(post['cover'], news_folder())
+        news_model.delete(id)
+        return redirect(url_for('news.all'))
+    abort(403)

@@ -1,0 +1,10 @@
+{% for one_news in news %}
+<div style="border: solid black 1px" class="clickable" onclick="onNewsClick('{{ one_news.id }}')" style="border: solid black 1px">
+    <div>
+        <img height="300px" src="{{ news_folder(one_news.cover) }}" alt="Cover">
+    </div>
+    <b>{{ one_news.title }}</b>
+    <p>{{ one_news.body }}</p>
+    <small>{{ one_news.posted_time }}</small>
+</div>
+{% endfor %}

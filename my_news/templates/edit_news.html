@@ -1,7 +1,7 @@
-{% extends "create_post.html" %}
+{% extends "create_news.html" %}
 {% block delete %}
 <div>
-    <form method="post" action="{{ url_for('posts.delete', id=id) }}">
+    <form method="post" action="{{ url_for('news.delete', id=id) }}">
         <button type="submit">Delete</button>
     </form>
 </div>

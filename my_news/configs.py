@@ -8,5 +8,5 @@ app_development = {'DEBUG': True,
 
 
 database_development = {'host': 'localhost',
-                'database': 'my_news',
+                'database': 'news',
                 **DATABASE_USER}

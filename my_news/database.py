@@ -20,6 +20,17 @@ def selectall(table, conditions_dict=None, order_dict=None):
     return __cursor.fetchall()
 
 
+def selectallin(table, in_dict, order_dict=None):
+    query = f'SELECT * FROM {table}'
+    condition = __convert_to_in_condition(in_dict)
+    query += f' WHERE {condition}'
+    if order_dict:
+        order = __convert_to_order(order_dict)
+        query += f' ORDER BY {order}'
+    __executeone(query, commit=False)
+    return __cursor.fetchall()
+
+
 def selectone(table, conditions_dict):
     conditions = __convert_to_conditions(conditions_dict)
     __executeone(f'SELECT * FROM {table} WHERE {conditions}', commit=False)
@@ -48,11 +59,6 @@ def __executeone(query, commit=True):
     if commit: __connect.commit()
 
 
-# def _executemany(query):
-#     __cursor.reset()
-#     __cursor.executemany(query)
-#     __connect.commit()
-
 def __convert_to_order(dict):
     if 'key' in dict.keys():
         order_by_string = dict['key']
@@ -72,11 +78,20 @@ def __convert_to_set(dict):
     return ', '.join(list)
 
 
+def __convert_to_in_condition(dict):
+    # TODO: Check if it's working
+    list = []
+    for key, value in dict.items():
+        list.append(f'{__column_quote(key)} in {__set_bracket(", ".join(value))}')
+    return ' and '.join(list)
+
+
 def __convert_to_conditions(dict):
+    # TODO: Check if it's working
     list = []
     for key, value in dict.items():
         list.append(f'{__column_quote(key)} = {__value_quote(value)}')
-    return ', '.join(list)
+    return ' and '.join(list)
 
 
 def __convert_to_columns_values(dict):

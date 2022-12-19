@@ -3,18 +3,18 @@
 <head>
     <meta charset="UTF-8">
     <title>{{ title }}</title>
-    <!-- if script passed, write -->
     <script src="{{ url_for('static', filename='script.js') }}"></script>
-    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
     {% block script %} {% endblock script %}
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
 </head>
 <body>
     <nav style="border: solid black 1px">
-        <a href="{{ url_for('posts.all') }}">News</a>
+        <a href="{{ url_for('news.all') }}">News</a>
         <a href="{{ url_for('users.all') }}">Users</a>
         <a href="{{ url_for('about.info') }}">About</a>
         {% if is_logged() %}
-            <a href="{{ url_for('users.me') }}">Account</a>
+            <a href="{{ url_for('users.one', login=logged_user()['login']) }}">Account</a>
         {% else %}
             <a href="{{ url_for('auth.login') }}">Log In</a>
             <a href="{{ url_for('auth.signup') }}">Sign Up</a>

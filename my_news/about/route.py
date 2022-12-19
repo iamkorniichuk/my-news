@@ -1,4 +1,4 @@
-from flask import Blueprint, render_template, redirect, url_for, abort
+from flask import Blueprint, render_template, redirect, url_for
 from my_news.models.reviews import reviews_model
 from .forms import *
 from my_news.utils.forms import set_values_to_form, get_values_from_form
@@ -11,7 +11,7 @@ about = Blueprint('about', __name__)
 @about.route('/about')
 @about.route('/reviews')
 def info():
-    allreviews = reviews_model.getallinorder({'key':'stars', 'reverse':True})
+    allreviews = reviews_model.getall({'key':'stars', 'reverse':True})
     return render_template('about.html', title='About', reviews=allreviews)
 
 
@@ -31,5 +31,5 @@ def create():
         return redirect(url_for('about.info'))
     set_values_to_form(form, review)
     # TODO: Refactor - unite all create/edit to one template
-    return render_template('create_post.html', title='Create', form=form)
+    return render_template('create_news.html', title='Create', form=form)
     

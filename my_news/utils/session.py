@@ -24,6 +24,16 @@ def login_required(func):
     return wrapper
 
 
+def admin_required(func):
+    @wraps(func)
+    def wrapper(*args, **kwargs):
+        if is_admin():
+            return func(*args, **kwargs)
+        else:
+            abort(403)
+    return wrapper
+
+
 def login_required(func):
     @wraps(func)
     def wrapper(*args, **kwargs):
@@ -61,3 +71,10 @@ def add_session_user(login):
 
 def is_logged():
     return True if'user' in session else False
+
+
+def is_admin():
+    if is_logged():
+        user = users_model.getone(session['user']['login'])
+        return user['is_admin']
+    return False

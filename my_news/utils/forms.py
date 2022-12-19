@@ -2,7 +2,7 @@ from wtforms import SubmitField
 from wtforms.csrf.core import CSRFTokenField
 
 
-service_fields = (SubmitField, CSRFTokenField)
+service_fields = (CSRFTokenField, SubmitField)
 
 
 def set_values_to_form(form, values):

@@ -10,8 +10,8 @@ def users_folder(file=None):
     return url_for('static', filename=name)
 
 
-def posts_folder(file=None):
-    name = 'files/posts/'
+def news_folder(file=None):
+    name = 'files/news/'
     if file:
         name += file
     return url_for('static', filename=name)

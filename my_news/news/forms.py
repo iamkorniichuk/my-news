@@ -4,7 +4,7 @@ from flask_wtf import FlaskForm
 from flask_wtf.file import FileField, FileRequired, FileAllowed
 
 
-class CreatePostForm(FlaskForm):
+class CreateNewsForm(FlaskForm):
     cover = FileField('Cover', [FileRequired(), FileAllowed(('jpg', 'png'))])
     title = StringField('Title', [DataRequired()])
     body = TextAreaField('Body', [DataRequired()])

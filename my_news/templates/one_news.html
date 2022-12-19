@@ -1,18 +1,21 @@
 {% extends "base.html" %}
 {% from 'macros.html' import render_form %}
+{% block script %}
+    <script src="{{ url_for('static', filename='mark_read.js') }}"></script>
+{% endblock script %}
 {% block content %}
     <div>
-        <small class="clickable" onclick="onUserClick('{{ post.user_login }}')">{{ post.user_login }}</small>
+        <small class="clickable" onclick="onUserClick('{{ news.user_login }}')">{{ news.user_login }}</small>
         <div>
-            <img class="cover" src="{{ posts_folder(post.cover) }}" alt="Cover">
+            <img class="cover" src="{{ news_folder(news.cover) }}" alt="Cover">
         </div>
-        <b>{{ post.title }}</b>
-        <p>{{ post.body }}</p>
-        <small>{{ post.posted_time }}</small>
+        <b>{{ news.title }}</b>
+        <p>{{ news.body }}</p>
+        <small>{{ news.posted_time }}</small>
     </div>
-    {% if is_its_account(post.user_login) %}
+    {% if is_its_account(news.user_login) %}
         <div>
-            <form action="{{ url_for('posts.edit', id=post.id) }}">
+            <form action="{{ url_for('news.edit', id=news.id) }}">
                 <button type="submit">Edit</button>
             </form>
         </div>
@@ -21,14 +24,13 @@
         {{ render_form(form) }}
     {% endif %}
     {% for comment in comments %}
-        
         <div style="border: solid black 1px">
             <small class="clickable" onclick="onUserClick('{{ comment.user_login }}')">{{ comment.user_login }}</small>
             <p>{{ comment.body }}</p>
             <small>{{ comment.posted_time }}</small>
             {% if is_its_account(comment.user_login) %}
             <div>
-                <form action="{{ url_for('posts.edit_comment', id=comment.id) }}">
+                <form action="{{ url_for('news.edit_comment', id=comment.id) }}">
                     <button type="submit">Edit</button>
                 </form>
             </div>
