@@ -11,7 +11,6 @@ class BaseModel:
         return database.selectall(self._table, kwargs, order)
 
 
-    # TODO: To end getallin
     def getallin(self, in_dict, order=None):
          return database.selectallin(self._table, in_dict, order)
 

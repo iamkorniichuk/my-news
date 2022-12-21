@@ -44,6 +44,15 @@ def login_required(func):
     return wrapper
 
 
+def add_session_user(login):
+    session.permanent = True
+    session['user'] = users_model.getone(login)
+
+
+def delete_session_user():
+    session.pop('user', None)
+
+
 # def fresh_login_required(func):
 #     @wraps(func)
 #     def wrapper(*args, **kwargs):
@@ -52,11 +61,6 @@ def login_required(func):
 #         else:
 #             abort(401)
 #     return wrapper
-
-
-def add_session_user(login):
-    session.permanent = True
-    session['user'] = users_model.getone(login)
 
 
 # def is_fresh_logged():
@@ -69,8 +73,9 @@ def add_session_user(login):
 #             return password == user['password']
 #     return False
 
+
 def is_logged():
-    return True if'user' in session else False
+    return True if 'user' in session else False
 
 
 def is_admin():

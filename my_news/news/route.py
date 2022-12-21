@@ -1,4 +1,4 @@
-from flask import Blueprint, render_template, redirect, request, url_for, abort
+from flask import Blueprint, render_template, redirect, request, url_for, abort, jsonify
 from .forms import *
 from my_news.models.news import news_model
 from my_news.models.comments import comments_model
@@ -13,7 +13,18 @@ news = Blueprint('news', __name__)
 @news.route('/')
 @news.route('/news')
 def all():
-    news = news_model.getall({'key':'posted_time', 'reverse':False})
+    # TODO: To end search
+    if request.args:
+        order = None
+        key = request.form.get('key')
+        reverse = request.form.get('reverse')
+        if key or reverse:
+            order = {}
+            order['key'] = key
+            order['reverse'] = reverse
+        news = news_model.getall({'key':'posted_time', 'reverse':False})
+        return jsonify({'htmlresponse': render_template('news_cover.html', news=news)})
+    news = news_model.getall()
     return render_template('news.html', title='News', news=news)
 
 

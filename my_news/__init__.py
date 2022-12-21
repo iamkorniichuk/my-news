@@ -9,7 +9,6 @@ from my_news.utils.files import news_folder, users_folder
 
 def create_app():
     app = Flask(__name__)
-    app.permanent_session_lifetime = timedelta(days=15)
     app.config.from_mapping(**app_development)
 
     

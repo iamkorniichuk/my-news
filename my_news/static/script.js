@@ -1,4 +1,4 @@
-// Make a config URL
+// TODO: Make a config URL
 const URL = "http://127.0.0.1:5000/"
 
 function onNewsClick(id){

@@ -1,11 +1,10 @@
-from flask import Blueprint, render_template, redirect, url_for, request, jsonify
+from flask import Blueprint, render_template, redirect, url_for, request, jsonify, json
 from .forms import *
 from my_news.utils.session import login_required, logged_user, add_session_user
 from my_news.utils.files import replace_file, delete_file,  users_folder
 from my_news.utils.forms import set_values_to_form, get_values_from_form
 from my_news.models.users import users_model
 from my_news.models.news import news_model
-import json
 
 
 users = Blueprint('users', __name__)
@@ -19,16 +18,19 @@ def all():
 
 @users.route('/user/<login>', methods=['POST', 'GET'])
 def one(login):
+    if login == logged_user()['login']:
+        return redirect(url_for('users.me'))
     user = users_model.getone(login)
     news = news_model.getall({'key':'posted_time', 'reverse': False}, user_login=login)
-    if request.method == 'POST':    
-        ids = request.form['history']
-        if ids:
-            ids = json.loads(ids)
-            history = news_model.getallin({'id': ids})
-            return jsonify({'htmlresponse': render_template('news_cover.html', news=history)})
     return render_template('user.html', title=user['login'], user=user, news=news)
     
+
+@users.route('/account', methods=['POST', 'GET'])
+def me():
+    user = users_model.getone(logged_user()['login'])
+    news = news_model.getall({'key':'posted_time', 'reverse': False}, user_login=logged_user()['login'])
+    return render_template('user.html', title=user['login'], user=user, news=news)
+
 
 @users.route('/account/edit', methods=['POST', 'GET'])
 @login_required

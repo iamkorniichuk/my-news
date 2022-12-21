@@ -1,7 +1,7 @@
 from flask import Blueprint, render_template, session, redirect, url_for
 from .forms import *
 from my_news.models.users import users_model
-from my_news.utils.session import add_session_user, login_required
+from my_news.utils.session import add_session_user, delete_session_user, login_required
 
 
 auth = Blueprint('auth', __name__)
@@ -35,5 +35,6 @@ def signup():
 @auth.route('/logout', methods=['POST', 'GET'])
 @login_required
 def logout():
-    session.pop('user', None)
+    # TODO: Clear localStorage when logout
+    delete_session_user()
     return redirect(url_for('auth.login'))

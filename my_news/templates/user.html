@@ -1,4 +1,5 @@
 {% extends "base.html" %}
+{% from 'macros.html' import render_news_covers %}
 {% block content %}
     <div>
         {# TODO: Set default image if hadn't been set #}
@@ -13,40 +14,7 @@
         </h1>
         <small>{{ user.login }}</small>
     </div>
-    {% if is_its_account(user.login) %}
-        <div>
-            <a href="{{ url_for('auth.logout') }}">Log out</a>
-        </div>
-        <div>
-            <form action="{{ url_for('users.edit') }}">
-                <button type="submit">Edit</button>
-            </form>
-        </div>
-        <script type = "text/javascript">
-            $.ajax({
-                url: "",
-                data: {'history': localStorage.getItem('history')},
-                type: 'post',
-                success: function(data){ 
-                    $('.history').html(data);
-                    $('.history').append(data.htmlresponse);
-                }
-            });
-        </script>
-        <h4>History</h4>
-        <div class="history">
-        </div>
-    {% endif %}
-    {# TODO: Create macros to render news or separate template (through jsonify) #}
-    <h4>News</h4>
-    {% for one_news in news %}
-        <div style="border: solid black 1px" class="clickable" onclick="onNewsClick('{{ one_news.id }}')" style="border: solid black 1px">
-            <div>
-                <img height="300px" src="{{ news_folder(one_news.cover) }}" alt="Cover">
-            </div>
-            <b>{{ one_news.title }}</b>
-            <p>{{ one_news.body }}</p>
-            <small>{{ one_news.posted_time }}</small>
-        </div>
-    {% endfor %}
+    <div>
+    {{ render_news_covers(news) }}
+    </div>
 {% endblock content %}
