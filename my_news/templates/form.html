@@ -1,2 +1,6 @@
 {% from 'macros.html' import render_form %}
-{% render_form(form) %}
+{% if action %}
+    {{ render_form(form, action) }}
+{% else %}
+    {{ render_form(form) }}
+{% endif %}

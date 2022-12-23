@@ -10,7 +10,10 @@ def logged_user():
 
 def is_its_account(login):
     if is_logged():
-        return logged_user()['login'] == login
+        try:
+            return logged_user()['login'] == login
+        except:
+            delete_session_user()
     return False
 
 
@@ -81,5 +84,8 @@ def is_logged():
 def is_admin():
     if is_logged():
         user = users_model.getone(session['user']['login'])
-        return user['is_admin']
+        try:
+            return user['is_admin']
+        except:
+            delete_session_user()
     return False

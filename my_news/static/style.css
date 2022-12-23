@@ -2,14 +2,8 @@
     cursor: pointer;
 }
 
-.thumbnail{
-    max-height: 20vh;
-}
-
-.cover{
-    max-height: 50vh;
-}
-
-.pfp{
-    height: 200px;
+.card-img-top {
+    width: 100%;
+    height: 25vw;
+    object-fit: cover;
 }

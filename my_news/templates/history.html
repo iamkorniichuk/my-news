@@ -1,0 +1,15 @@
+{% extends "base.html" %}
+{% block content %}
+<script type = "text/javascript">
+    $.ajax({
+        data: {'history': localStorage.getItem('history')},
+        type: 'post',
+        success: function(data){ 
+            $('#news').html(data);
+            $('#news').append(data.htmlresponse);
+        }
+    });
+</script>
+<div id="news">
+</div>
+{% endblock content %}
