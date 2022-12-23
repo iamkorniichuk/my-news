@@ -17,9 +17,14 @@ class BaseModel:
 
     def getone(self, id):
         return database.selectone(self._table, {self._id: id})
-# TODO: INSERT QUOTES IN
+
+
+    def search(self, key, text):
+        return database.selectlike(self._table, key, text)
+
 
     def add(self, **kwargs):
+        # TODO: INSERT QUOTES IN
         database.insertone(self._table, kwargs)
 
 

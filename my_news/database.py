@@ -8,6 +8,13 @@ __connect = mysql.connect(
 __cursor = __connect.cursor(dictionary=True)
 
 
+def selectlike(table, column, text):
+    query = f'SELECT * FROM {table} WHERE {column} like {__value_quote(f"%{text}%")}'
+    print(query)
+    __executeone(query, commit=False)
+    return __cursor.fetchall()
+
+
 def selectall(table, conditions_dict=None, order_dict=None):
     query = f'SELECT * FROM {table}'
     if conditions_dict:

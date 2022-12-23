@@ -13,32 +13,20 @@ news = Blueprint('news', __name__)
 @news.route('/', methods=['POST', 'GET'])
 @news.route('/news', methods=['POST', 'GET'])
 def all():
-    # TODO: To end creating
     form = CreateNewsForm()
     if form.validate_on_submit():
-        create_news(form)
+        values = get_values_from_form(form)
+        values['user_login'] = logged_user()['login']
+        values['cover'] = save_file(values['cover'], news_folder())
+        news_model.add(**values)
         return redirect(url_for('news.all'))
     # TODO: To end search
     if request.args:
-        order = None
-        key = request.form.get('key')
-        reverse = request.form.get('reverse')
-        if key or reverse:
-            order = {}
-            order['key'] = key
-            order['reverse'] = reverse
-        news = news_model.getall()
-        return jsonify({'htmlresponse': render_template('news_cover.html', news=news)})
-    news = news_model.getall({'key':'posted_time', 'reverse':False})
+        news = news_model.search('title', request.args['text'])
+    else:
+        news = news_model.getall({'key':'posted_time', 'reverse':False})
     return render_template('news.html', title='News', news=news, form=form)
 
-
-def create_news(form):
-    # TODO: To end creating
-    values = get_values_from_form(form)
-    values['user_login'] = logged_user()['login']
-    values['cover'] = save_file(values['cover'], news_folder())
-    news_model.add(**values)
 
 
 @news.route('/history', methods=['POST', 'GET'])
@@ -76,7 +64,6 @@ def one(id):
 def edit(id):
     form = CreateNewsForm()
     news = news_model.getone(id)
-    # TODO: Show error only if form doesn't validate
     if is_its_account(news['user_login']):
         if request.form.get('show'):
             pass

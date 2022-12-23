@@ -36,6 +36,17 @@
 {% endmacro %}
 
 
+{% macro render_search_bar() %}
+{# TODO: To end search #}
+<form class="form-inline" role="search">
+    <div class="input-group">
+        <input name="text" class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search">
+        <button class="btn btn-outline-secondary my-2 my-sm-0" type="submit">Search</button>
+    </div>
+</form>
+{% endmacro %}
+
+
 {% macro render_divider() %}
     <div class="my-3">
         <hr>

@@ -1,4 +1,4 @@
-{% from 'macros.html' import render_account_dropdown, render_modal %}
+{% from 'macros.html' import render_account_dropdown, render_modal, render_search_bar %}
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -15,8 +15,11 @@
 <body>
     <nav class="navbar navbar-expand-lg navbar-light bg-light justify-content-between">
         <div class="container-fluid">
-            <div class="navbar-brand">
+            <a class="navbar-brand" href="{{ url_for('news.all') }}">
                 <i class="fa fa-list-alt fa-2x"></i>
+            </a>
+            <div class=" d-lg-none">
+                {{ render_search_bar() }}
             </div>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent"
                 aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
@@ -47,21 +50,22 @@
                         {% endif %}
                     </li>
                 </ul>
-                {# TODO: To end search #}
-                <form class="form-inline" role="search">
-                    <div class="input-group">
-                        <input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search">
-                        <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
-                    </div>
-                </form>
-                <div class="navbar-nav">
+                <div class="d-none d-lg-block">
+                    {{ render_search_bar() }}
+                </div>
+                <ul class="navbar-nav">
                     {% if is_logged() %}
                         {{ render_account_dropdown() }}
+                    </li>
                     {% else %}
-                        <a href="{{ url_for('auth.login') }}">Log In</a>
-                        <a href="{{ url_for('auth.signup') }}">Sign Up</a>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ url_for('auth.login') }}">Log In</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ url_for('auth.signup') }}">Sign Up</a>
+                    </li>
                     {% endif %}
-                </div>
+                </ul>
             </div>
         </div>
     </nav>
