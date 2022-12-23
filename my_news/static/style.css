@@ -7,3 +7,7 @@
     height: 25vw;
     object-fit: cover;
 }
+
+textarea{
+    height: 150px;
+}

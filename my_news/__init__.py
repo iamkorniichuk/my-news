@@ -1,7 +1,6 @@
-from flask import Flask
+from flask import Flask, request
 from wtforms import SubmitField
 from wtforms.csrf.core import CSRFTokenField
-from datetime import timedelta
 from .configs import *
 from my_news.utils.session import is_logged, is_its_account, is_admin, logged_user
 from my_news.utils.files import news_folder, users_folder
@@ -21,6 +20,7 @@ def create_app():
     app.jinja_env.globals['is_its_account'] = is_its_account
     app.jinja_env.globals['news_folder'] = news_folder
     app.jinja_env.globals['users_folder'] = users_folder
+    app.jinja_env.globals['request'] = request
 
 
     from .auth.route import auth

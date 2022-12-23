@@ -74,9 +74,9 @@ def one(id):
 @news.route('/news/edit/<int:id>', methods=['POST'])
 @admin_required
 def edit(id):
-    # TODO: Dealt with edit/create form (create one or rename)
     form = CreateNewsForm()
     news = news_model.getone(id)
+    # TODO: Show error only if form doesn't validate
     if is_its_account(news['user_login']):
         if request.form.get('show'):
             pass
@@ -86,9 +86,9 @@ def edit(id):
             new_cover = values['cover']
             values['cover'] = replace_file(old_cover, new_cover, news_folder())
             news_model.update(id, **values)
-            return redirect(url_for('news.all'))
+            return jsonify({'urlresponse': url_for('news.all')})
         set_values_to_form(form, news)
-        return jsonify({'htmlresponse': render_template('form.html', form=form, action=url_for('news.edit', id=id))})
+        return jsonify({'htmlresponse': render_template('modal_form.html', form=form, action=url_for('news.edit', id=id))})
     abort(403)
 
 

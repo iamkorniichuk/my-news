@@ -12,14 +12,37 @@ function onUserClick(login){
 function onEditClick(url){
     $.ajax({
         url: url,
-        data: {'show': true},
         type: 'post',
-        success: function(data){ 
-            $('.modal-body').html(data);
-            $('.modal-body').append(data.htmlresponse);
-            $('#empModal').modal('show'); 
-        }
+        data: {'show': true},
+        success: 
+            function(data){
+                renderModal(data)
+            }
     });
+}
+
+function onSubmit(url){
+    $.ajax({
+        url: url,
+        data: new FormData(document.getElementById('modalForm')),
+        processData: false,
+        contentType: false,
+        type: 'post',
+        success: 
+            function(data){
+                if(data.htmlresponse){
+                    renderModal(data)
+                }else{
+                    location.reload()
+                }
+            }
+    });
+}
+
+function renderModal(data){
+    $('.modal-body').html(data);
+    $('.modal-body').append(data.htmlresponse);
+    $('#empModal').modal('show');
 }
 
 function onLogoutClick(){

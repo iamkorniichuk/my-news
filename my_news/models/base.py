@@ -17,7 +17,7 @@ class BaseModel:
 
     def getone(self, id):
         return database.selectone(self._table, {self._id: id})
-
+# TODO: INSERT QUOTES IN
 
     def add(self, **kwargs):
         database.insertone(self._table, kwargs)

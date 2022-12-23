@@ -1,20 +1,30 @@
 {% extends "base.html" %}
-{% from 'macros.html' import render_news_covers %}
+{% from 'macros.html' import render_content_dropdown, render_news_covers, render_profile_picture, render_divider %}
 {% block content %}
-    <div>
-        {# TODO: Set default image if hadn't been set #}
-        <img class="pfp" src="{{ users_folder(user.image) }}" alt="Image">
-        <h1>
-            {% if user.first_name %}
-                {{ user.first_name }}
-            {% endif %}
-            {% if user.last_name %}
-                {{ user.last_name }}
-            {% endif %}
-        </h1>
-        <small>{{ user.login }}</small>
+    <div class="d-flex">
+        <div class="flex-shrink-0">
+        {{ render_profile_picture(150) }}
+        </div>
+        <div class="flex-grow-1 mx-4">
+            <h3 class="m-0">
+                {% if user.first_name %}
+                    {{ user.first_name }}
+                {% endif %}
+                {% if user.last_name %}
+                    {{ user.last_name }}
+                {% endif %}
+            </h3>
+            <p class="text-muted pb-0">
+                {{ user.login }}
+            </p>
+            <p class="py-0">
+                {{ user.description }}
+            </p>
+        </div>
+        {{ render_content_dropdown(url_for('users.edit'), url_for('users.delete')) }}
     </div>
     <div>
+    {{ render_divider() }}
     {{ render_news_covers(news) }}
     </div>
 {% endblock content %}

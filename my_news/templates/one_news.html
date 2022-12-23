@@ -1,15 +1,22 @@
 {% extends "base.html" %}
-{% from 'macros.html' import render_form %}
+{% from 'macros.html' import render_form, render_profile_picture %}
 {% block script %}
     <script src="{{ url_for('static', filename='mark_read.js') }}"></script>
 {% endblock script %}
 {% block content %}
     <div>
-        <small class="clickable" onclick="onUserClick('{{ news.user_login }}')">{{ news.user_login }}</small>
-        <div>
-            <img class="cover" src="{{ news_folder(news.cover) }}" alt="Cover">
+        <div class="bg-image">
+            <img class="w-100" src="{{ news_folder(news.cover) }}" alt="Cover"/>
+            <div class="mask">
+                <div class="d-inline mx-2 align-middle">
+                    {{ render_profile_picture(50) }}
+                </div>
+                <h3 class="d-inline">
+                    {{ news.user_login }}
+                </h3>
+            </div>
         </div>
-        <b>{{ news.title }}</b>
+        <h2>{{ news.title }}</h2>
         <p>{{ news.body }}</p>
         <small>{{ news.posted_time }}</small>
     </div>

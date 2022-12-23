@@ -1,10 +1,9 @@
 {% extends "base.html" %}
-{% from 'macros.html' import render_news_covers, render_form %}
+{% from 'macros.html' import render_news_covers, render_form, render_divider %}
 {% block content %}
     {% if is_admin() %}
-    <div>
-       {{ render_form(form) }}
-    </div>
+    {{ render_form(form) }}
+    {{ render_divider() }}
     {% endif %}
     {{ render_news_covers(news) }}
 {% endblock content %}

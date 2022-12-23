@@ -1,28 +1,58 @@
-{% macro render_form(form, action) %}
-    {% if action %}
-        <form method="POST" enctype="multipart/form-data" action="{{ action }}">
-    {% else %}
-        <form method="POST" enctype="multipart/form-data">
-    {% endif %}
-        {{ form.hidden_tag() }}
+{% macro render_form(form) %}
+    <form method="POST" enctype="multipart/form-data">
+        {{ render_fields(form) }}
+    </form>
+{% endmacro %}
+
+
+{% macro render_modal_form(form, action) %}
+    <form id="modalForm" enctype="multipart/form-data" onsubmit="event.preventDefault(); onSubmit('{{ action }}')">
+        {{ render_fields(form) }}
+    </form>
+{% endmacro %}
+
+
+{% macro render_fields(form) %}
+    {{ form.hidden_tag() }}
         {% for field in form %}
             {% if isinstance(field, CSRFTokenField) %}
                 {{ continue }}
             {% elif isinstance(field, SubmitField) %}
-                {{ field(class="btn btn-primary") }}
+                {{ field(class="btn btn-primary w-100 mt-3") }}
             {% else %}
                 {% if field.errors %}
                     <div style="background-color: red; color: white">
                         {{ field.errors }}
                     </div>
                 {% endif %}
-                    <div class="form-group">
-                        {{ field.label }}
-                        {{ field(class="form-control") }}
+                    <div class="mt-2">
+                        <div class="form-group">
+                            {{ field.label }}
+                            {{ field(class="form-control") }}
+                        </div>
                     </div>
             {% endif %}
         {% endfor %}
-    </form>
+{% endmacro %}
+
+
+{% macro render_divider() %}
+    <div class="my-3">
+        <hr>
+    </div>
+{% endmacro %}
+
+
+{% macro render_profile_picture(size) %}
+    {% if size %}
+        <object height="{{ size }}" width="{{ size }}" class="rounded-circle" data="{{ users_folder(logged_user().image) }}" type="image/png" style="object-fit: cover;">
+            <img height="{{ size }}" width="{{ size }}" class="rounded-circle" src="https://i.pinimg.com/736x/c9/e3/e8/c9e3e810a8066b885ca4e882460785fa.jpg" alt="Profile picture" style="object-fit: cover;">
+        </object>
+    {% else %}
+        <object height="25" width="25" class="rounded-circle" data="{{ users_folder(logged_user().image) }}" type="image/png" style="object-fit: cover;">
+            <img height="25" width="25" class="rounded-circle" src="https://i.pinimg.com/736x/c9/e3/e8/c9e3e810a8066b885ca4e882460785fa.jpg" alt="Profile picture" style="object-fit: cover;">
+        </object>
+    {% endif %}
 {% endmacro %}
 
 
@@ -33,10 +63,10 @@
         </button>
         <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
             <form class="dropdown-item">
-                <button class="btn" type="button" onclick="onEditClick('{{ edit }}')">Edit</button>
+                <button class="btn w-100" type="button" onclick="onEditClick('{{ edit }}')">Edit</button>
             </form>
             <form method="post" class="dropdown-item" action="{{ delete }}">
-                <button class="btn" type="submit">Delete</button>
+                <button class="btn w-100" type="submit">Delete</button>
             </form>
         </div>
     </div>
@@ -47,7 +77,14 @@
     <div class="dropdown">
         <button class="btn dropdown-toggle" type="button" id="dropdownMenuButton"
             data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-            Account
+            <div class="d-inline">
+                <div class="d-inline mx-1 align-middle">
+                    {{ render_profile_picture() }}
+                </div>
+                <div class="d-inline">
+                    Account
+                </div>
+            </div>
         </button>
         <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
             <a class="dropdown-item" href="{{ url_for('users.me') }}">Account</a>
@@ -77,14 +114,29 @@
         {% for one_news in news %}
             <div class="col-4">
                 <div class="card">
-                    <img class="card-img-top clickable" onclick="onNewsClick('{{ one_news.id }}')"
+                    <img class="card-img-top"
                         src="{{ news_folder(one_news.cover) }}" alt="Cover">
+                    <div class="card-img-overlay clickable" onclick="onNewsClick('{{ one_news.id }}')">
+                        <div class="card-title text-white">
+                            <div class="d-inline">
+                                <div class="d-inline mx-1 align-middle">
+                                    {{ render_profile_picture() }}
+                                </div>
+                                <div class="d-inline">
+                                    {{ one_news.user_login }}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                     <div class="card-body">
                         <h5 class="card-title d-flex justify-content-between">{{ one_news.title }}
                         {% if is_its_account(one_news.user_login) %}
                         {{ render_content_dropdown(url_for('news.edit', id=one_news.id), url_for('news.delete', id=one_news.id)) }}
                         {% endif %}
                         </h5>
+                        <p class="card-text text-truncate">
+                            {{ one_news.body }}
+                        </p>
                     </div>
                     <div class="card-footer">
                         <small class="text-muted">{{ one_news.posted_time }}</small>

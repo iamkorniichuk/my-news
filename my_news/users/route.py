@@ -32,7 +32,7 @@ def me():
     return render_template('user.html', title=user['login'], user=user, news=news)
 
 
-@users.route('/account/edit', methods=['POST', 'GET'])
+@users.route('/account/edit', methods=['POST'])
 @login_required
 def edit():
     form = EditAccountForm()
@@ -40,13 +40,16 @@ def edit():
         values = get_values_from_form(form)
         old_image = logged_user()['image']
         new_image = values['image']
-        values['image'] = replace_file(old_image, new_image, users_folder())
-        # TODO: Refresh info in session | Will it be better if use caching?
+        if new_image:
+            values['image'] = replace_file(old_image, new_image, users_folder())
+        else:
+            delete_file(old_image, users_folder())
+            values['image'] = ''
         add_session_user(logged_user()['login'])
         users_model.update(logged_user()['login'], **values)
         return redirect(url_for('users.me'))
     set_values_to_form(form, logged_user())
-    return render_template('edit_account.html', title='Edit Account', form=form)
+    return jsonify({'htmlresponse': render_template('modal_form.html', form=form, action=url_for('users.edit'))})
 
 
 @users.route('/account/delete', methods=['POST'])
