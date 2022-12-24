@@ -53,17 +53,16 @@ def history():
     return render_template('history.html', title='History')
 
 
-@news.route('/news/<int:id>')
+@news.route('/news/<int:id>', methods=['POST', 'GET'])
 def one(id):
     form = CreateCommentForm()
     news = news_model.getone(id)
-    comments = comments_model.getall({'key':'posted_time', 'reverse':False}, news_id=id)
     if form.validate_on_submit():
         comments_model.add(user_login=logged_user()['login'],
                             news_id=id,
                             body=form.body.data)
         return redirect(url_for('news.one', id=id))
-    return render_template('one_news.html', title=news['title'], news=news, form=form, comments=comments)
+    return render_template('one_news.html', title=news['title'], news=news, form=form)
 
 
 @news.route('/news/edit/<int:id>', methods=['POST'])
@@ -80,7 +79,7 @@ def edit(id):
             new_cover = values['cover']
             values['cover'] = replace_file(old_cover, new_cover, news_folder())
             news_model.update(id, **values)
-            return jsonify({'urlresponse': url_for('news.all')})
+            return jsonify({'reload': True})
         set_values_to_form(form, news)
         return jsonify({'htmlresponse': render_template('modal_form.html', form=form, action=url_for('news.edit', id=id))})
     abort(403)
@@ -97,19 +96,26 @@ def delete(id):
     abort(403)
 
 
+@news.route('/comments/<int:id>', methods=['POST'])
+def comments(id):
+    comments = comments_model.getall(news_id=id)
+    return jsonify({'htmlresponse': render_template('comments.html', comments=comments)})
+
+
 @news.route('/comment/edit/<int:id>', methods=['POST'])
 @login_required
 def edit_comment(id):
-    # TODO: Dealt with edit/create form (create one or rename)
     form = CreateCommentForm()
-    comment = comments_model.getone(id)
-    if is_its_account(comment['user_login']):
-        if form.validate_on_submit():
+    comments = comments_model.getone(id)
+    if is_its_account(comments['user_login']):
+        if request.form.get('show'):
+            pass
+        elif form.validate_on_submit():
             values = get_values_from_form(form)
             comments_model.update(id, **values)
-            return redirect(url_for('news.one', id=comment['post_id']))
-        set_values_to_form(form, comment)
-        return render_template('edit_comment.html', title='Edit', form=form, id=id)
+            return jsonify({'reload': True})
+        set_values_to_form(form, comments)
+        return jsonify({'htmlresponse': render_template('modal_form.html', form=form, action=url_for('news.edit_comment', id=id))})
     abort(403)
 
 
@@ -119,7 +125,7 @@ def delete_comment(id):
     comment = comments_model.getone(id)
     if is_its_account(comment['user_login']):
         comments_model.delete(id)
-        return redirect(url_for('news.one', id=comment['post_id']))
+        return redirect(url_for('news.one', id=comment['news_id']))
     abort(403)
 
 

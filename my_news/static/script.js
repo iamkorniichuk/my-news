@@ -42,6 +42,18 @@ function renderModal(data){
     $('#empModal').modal('show');
 }
 
+function loadSection(url, id){
+    $.ajax({
+        url: url,
+        type: 'post',
+        success: 
+            function(data){
+                $(`#${id}`).html(data);
+                $(`#${id}`).append(data.htmlresponse);
+            }
+    });
+}
+
 function onLogoutClick(){
     localStorage.clear()
 }

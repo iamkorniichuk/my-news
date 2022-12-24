@@ -165,6 +165,40 @@
 {% endmacro %}
 
 
+{% macro render_comments(comments) %}
+    <div class="gap-2">
+    {% for comment in comments %}
+        <div class="card">
+            <div class="card-body">
+                <h4 class="card-title">
+                    <div class="d-inline-flex justify-content-between w-100">
+                        <div class="clickable" onclick="onUserClick('{{ comment.user_login }}')">
+                            <div class="d-inline mx-1 align-middle">
+                                {{ render_profile_picture() }}
+                            </div>
+                            <div class="d-inline">
+                                {{ comment.user_login }}
+                            </div>
+                        </div>
+                        {% if is_its_account(comment.user_login) %}
+                            <div>
+                                {{ render_content_dropdown(url_for('news.edit_comment', id=comment.id), url_for('news.delete_comment', id=comment.id)) }}
+                            </div>
+                        {% endif %}
+                    </div>
+                </h4>
+                <p class="card-text">{{ comment.body }}</p>
+            </div>
+            
+            <div class="card-footer">
+                {{ comment.posted_time }}
+            </div>
+        </div>
+    {% endfor %}
+    </div>
+{% endmacro %}
+
+
 {% macro render_modal() %}
     <div class="modal fade" id="empModal" role="dialog">
         <div class="modal-dialog">
