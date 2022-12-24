@@ -8,9 +8,14 @@ __connect = mysql.connect(
 __cursor = __connect.cursor(dictionary=True)
 
 
+def count(table):
+    query = f'SELECT COUNT(*) as count FROM {table}'
+    __executeone(query, commit=False)
+    return __cursor.fetchall()
+
+
 def selectlike(table, column, text):
     query = f'SELECT * FROM {table} WHERE {column} like {__value_quote(f"%{text}%")}'
-    print(query)
     __executeone(query, commit=False)
     return __cursor.fetchall()
 

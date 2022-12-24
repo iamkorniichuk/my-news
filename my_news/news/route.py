@@ -1,8 +1,9 @@
 from flask import Blueprint, render_template, redirect, request, url_for, abort, jsonify, json
 from .forms import *
+from my_news.models.users import users_model
 from my_news.models.news import news_model
 from my_news.models.comments import comments_model
-from my_news.utils.session import login_required, logged_user, is_its_account, admin_required
+from my_news.utils.session import login_required, logged_user, is_its_account, admin_required, is_admin
 from my_news.utils.files import save_file, news_folder, delete_file, replace_file
 from my_news.utils.forms import set_values_to_form, get_values_from_form
 
@@ -25,6 +26,12 @@ def all():
         news = news_model.search('title', request.args['text'])
     else:
         news = news_model.getall({'key':'posted_time', 'reverse':False})
+    if is_admin():
+        info = {}
+        info['users'] = users_model.count()
+        info['news'] = news_model.count()
+        info['comments'] = comments_model.count()
+        return render_template('news.html', title='News', news=news, form=form, info=info)
     return render_template('news.html', title='News', news=news, form=form)
 
 

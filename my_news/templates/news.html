@@ -2,7 +2,35 @@
 {% from 'macros.html' import render_news_covers, render_form, render_divider %}
 {% block content %}
     {% if is_admin() %}
-    {{ render_form(form) }}
+    <div class="row gx-3 gy-3">
+        <div class="col">
+            <div class="card">
+                <div class="card-body">
+                    <h4 class="card-title">Create news</h4>
+                    {{ render_form(form) }}
+                </div>
+            </div>
+        </div>
+        <div class="col d-grid gap-3">
+            <div class="card">
+                <div class="card-body">
+                    <h4 class="card-title">Users registered</h4>
+                    <p class="card-text">{{ info.users }} users</p>
+                </div>
+            </div>
+            <div class="card">
+                <div class="card-body">
+                    <h4 class="card-title">News created</h4>
+                    <p class="card-text"></p>{{ info.news }} news</p>
+                </div>
+            </div> <div class="card">
+                <div class="card-body">
+                    <h4 class="card-title">Comments written</h4>
+                    <p class="card-text"></p>{{ info.comments }} comments</p>
+                </div>
+            </div>
+        </div>
+    </div>
     {{ render_divider() }}
     {% endif %}
     {{ render_news_covers(news) }}

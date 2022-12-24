@@ -23,6 +23,10 @@ class BaseModel:
         return database.selectlike(self._table, key, text)
 
 
+    def count(self):
+        return database.count(self._table)[0]['count']
+
+
     def add(self, **kwargs):
         # TODO: INSERT QUOTES IN
         database.insertone(self._table, kwargs)
