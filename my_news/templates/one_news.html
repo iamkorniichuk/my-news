@@ -1,24 +1,20 @@
 {% extends "base.html" %}
-{% from 'macros.html' import render_form, render_profile_picture, render_divider %}
+{% from 'macros.html' import render_form, render_profile_picture, render_divider, render_author %}
 {% block script %}
     <script src="{{ url_for('static', filename='mark_read.js') }}"></script>
 {% endblock script %}
 {% block content %}
-    <div>
-        <div class="bg-image">
-            <img class="w-100" src="{{ news_folder(news.cover) }}" alt="Cover"/>
-            <div class="mask">
-                <div class="d-inline mx-2 align-middle">
-                    {{ render_profile_picture(50) }}
-                </div>
-                <h3 class="d-inline">
-                    {{ news.user_login }}
-                </h3>
-            </div>
-        </div>
-        <h2>{{ news.title }}</h2>
-        <p>{{ news.body }}</p>
-        <small>{{ news.posted_time }}</small>
+{{ render_author(news.user_login, news.user_login) }}
+<h1 class="mb-3">{{ news.title }}</h1>
+    <div class="row">
+        <div class="col">
+            <img class="float-start w-25 me-3 mb-3" src="{{ news_folder(news.cover) }}" alt="Cover"/>
+            <p>
+                {{ news.body }}
+                <br>
+                <small class="text-muted">{{ news.posted_time }}</small>
+            </p>
+         </div>
     </div>
     {{ render_divider() }}
     {% if is_logged() %}

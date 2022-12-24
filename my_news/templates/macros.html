@@ -91,14 +91,7 @@
     <div class="dropdown">
         <button class="btn dropdown-toggle" type="button" id="dropdownMenuButton"
             data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-            <div class="d-inline">
-                <div class="d-inline mx-1 align-middle">
-                    {{ render_profile_picture() }}
-                </div>
-                <div class="d-inline">
-                    Account
-                </div>
-            </div>
+            {{ render_author('Account') }}
         </button>
         <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
             <a class="dropdown-item" href="{{ url_for('users.me') }}">Account</a>
@@ -107,19 +100,6 @@
             <a class="dropdown-item" href="{{ url_for('auth.logout') }}" onclick="onLogoutClick()">Logout</a>
         </div>
     </div>
-{% endmacro %}
-
-
-{% macro render_comments(comments) %}
-    {% for comment in comments %}
-    <div style="border: solid black 1px">
-        <small class="clickable" onclick="onUserClick('{{ comment.user_login }}')">{{ comment.user_login }}</small>
-        <p>{{ comment.body }}</p>
-        <small>{{ comment.posted_time }}</small>
-        {% if is_its_account(comment.user_login) %}
-        {% endif %}
-    </div>
-    {% endfor %}
 {% endmacro %}
 
 
@@ -132,14 +112,7 @@
                         src="{{ news_folder(one_news.cover) }}" alt="Cover">
                     <div class="card-img-overlay clickable" onclick="onNewsClick('{{ one_news.id }}')">
                         <div class="card-title text-white">
-                            <div class="d-inline">
-                                <div class="d-inline mx-1 align-middle">
-                                    {{ render_profile_picture() }}
-                                </div>
-                                <div class="d-inline">
-                                    {{ one_news.user_login }}
-                                </div>
-                            </div>
+                            {{ render_author(one_news.user_login) }}
                         </div>
                     </div>
                     <div class="card-body">
@@ -165,6 +138,24 @@
 {% endmacro %}
 
 
+{% macro render_author(name, url) %}
+<div class="d-inline 
+    {% if url %}
+        clickable" onclick="onUserClick('{{ url }}')"
+    {% else %}
+    "
+    {% endif %}
+>
+    <div class="d-inline mx-1 align-middle">
+        {{ render_profile_picture() }}
+    </div>
+    <div class="d-inline">
+        {{ name }}
+    </div>
+</div>
+{% endmacro %}
+
+
 {% macro render_comments(comments) %}
     <div class="gap-2">
     {% for comment in comments %}
@@ -172,14 +163,7 @@
             <div class="card-body">
                 <h4 class="card-title">
                     <div class="d-inline-flex justify-content-between w-100">
-                        <div class="clickable" onclick="onUserClick('{{ comment.user_login }}')">
-                            <div class="d-inline mx-1 align-middle">
-                                {{ render_profile_picture() }}
-                            </div>
-                            <div class="d-inline">
-                                {{ comment.user_login }}
-                            </div>
-                        </div>
+                        {{ render_author(comment.user_login, comment.user_login) }}
                         {% if is_its_account(comment.user_login) %}
                             <div>
                                 {{ render_content_dropdown(url_for('news.edit_comment', id=comment.id), url_for('news.delete_comment', id=comment.id)) }}
@@ -189,7 +173,6 @@
                 </h4>
                 <p class="card-text">{{ comment.body }}</p>
             </div>
-            
             <div class="card-footer">
                 {{ comment.posted_time }}
             </div>
