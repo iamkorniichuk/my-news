@@ -1,4 +1,4 @@
-from flask import Blueprint, render_template, session, redirect, url_for
+from flask import Blueprint, render_template, redirect, url_for
 from .forms import *
 from my_news.models.users import users_model
 from my_news.utils.session import add_session_user, delete_session_user, login_required
@@ -16,7 +16,7 @@ def login():
         if users_model.auth(login, password):
             add_session_user(login)
             return redirect(url_for('news.all'))
-    return render_template('login.html', title='Log In', form=form)
+    return render_template('auth.html', title='Log In', form=form)
 
 
 @auth.route('/signup', methods=['POST', 'GET'])
@@ -29,7 +29,7 @@ def signup():
         users_model.add(email=email, login=login, password=password)
         add_session_user(login)
         return redirect(url_for('news.all'))
-    return render_template('signup.html', title='Sign Up', form=form)
+    return render_template('auth.html', title='Sign Up', form=form)
 
 
 @auth.route('/logout', methods=['POST', 'GET'])

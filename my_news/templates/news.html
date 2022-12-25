@@ -1,6 +1,7 @@
 {% extends "base.html" %}
 {% from 'macros.html' import render_news_covers, render_form, render_divider %}
 {% block content %}
+<div class="container px-5 py-2">
     {% if is_admin() %}
     <div class="row gx-3 gy-3">
         <div class="col">
@@ -34,4 +35,5 @@
     {{ render_divider() }}
     {% endif %}
     {{ render_news_covers(news) }}
+</div>
 {% endblock content %}

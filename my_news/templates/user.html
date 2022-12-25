@@ -1,9 +1,10 @@
 {% extends "base.html" %}
 {% from 'macros.html' import render_content_dropdown, render_news_covers, render_profile_picture, render_divider %}
 {% block content %}
+<div class="container px-5 py-2">
     <div class="d-flex">
         <div class="flex-shrink-0">
-        {{ render_profile_picture(150) }}
+        {{ render_profile_picture(users_folder(user.image), 150) }}
         </div>
         <div class="flex-grow-1 mx-4">
             <h3 class="m-0">
@@ -27,4 +28,5 @@
     {{ render_divider() }}
     {{ render_news_covers(news) }}
     </div>
+</div>
 {% endblock content %}

@@ -20,16 +20,18 @@ def all():
 def one(login):
     if login == logged_user()['login']:
         return redirect(url_for('users.me'))
-    user = users_model.getone(login)
-    news = news_model.getall({'key':'posted_time', 'reverse': False}, user_login=login)
+    user, news = get_user_info(login)
     return render_template('user.html', title=user['login'], user=user, news=news)
     
 
 @users.route('/account', methods=['POST', 'GET'])
 def me():
-    user = users_model.getone(logged_user()['login'])
-    news = news_model.getall({'key':'posted_time', 'reverse': False}, user_login=logged_user()['login'])
+    user, news = get_user_info(logged_user()['login'])
     return render_template('user.html', title=user['login'], user=user, news=news)
+
+
+def get_user_info(login):
+    return users_model.getone(login), news_model.appendone_getall(news_model.getall({'key':'posted_time', 'reverse': False}, user_login=login), 'users', ['user_login', 'login'])
 
 
 @users.route('/account/edit', methods=['POST'])

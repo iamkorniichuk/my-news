@@ -4,8 +4,9 @@
     <script src="{{ url_for('static', filename='mark_read.js') }}"></script>
 {% endblock script %}
 {% block content %}
-{{ render_author(news.user_login, news.user_login) }}
-<h1 class="mb-3">{{ news.title }}</h1>
+<div class="container px-5 py-2">
+{{ render_author(news.user_login, users_folder(news.image), news.user_login) }}
+    <h1 class="mb-3">{{ news.title }}</h1>
     <div class="row">
         <div class="col">
             <img class="float-start w-25 me-3 mb-3" src="{{ news_folder(news.cover) }}" alt="Cover"/>
@@ -25,4 +26,5 @@
     </script>
     <div id="comments" class="my-3">
     </div>
+</div>
 {% endblock content %}

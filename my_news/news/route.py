@@ -22,10 +22,8 @@ def all():
         news_model.add(**values)
         return redirect(url_for('news.all'))
     # TODO: To end search
-    if request.args:
-        news = news_model.search('title', request.args['text'])
-    else:
-        news = news_model.getall({'key':'posted_time', 'reverse':False})
+    fetched = news_model.search('title', request.args.get('text'), {'key':'posted_time', 'reverse':False})
+    news = news_model.appendone_getall(fetched, 'users', ['user_login', 'login'])
     if is_admin():
         info = {}
         info['users'] = users_model.count()
@@ -43,7 +41,7 @@ def history():
         if ids:
             history = []
             for id in json.loads(ids):
-                news = news_model.getone(id)
+                news = news_model.appendone_getone(news_model.getone(id), 'users', ['user_login', 'login'])
                 if news:
                     history.append(news)
             history.reverse()
@@ -56,11 +54,12 @@ def history():
 @news.route('/news/<int:id>', methods=['POST', 'GET'])
 def one(id):
     form = CreateCommentForm()
-    news = news_model.getone(id)
+    news = news_model.appendone_getone(news_model.getone(id), 'users',  ['user_login', 'login'])
     if form.validate_on_submit():
-        comments_model.add(user_login=logged_user()['login'],
-                            news_id=id,
-                            body=form.body.data)
+        values = get_values_from_form(form)
+        values['user_login'] = logged_user()['login']
+        values['news_id'] = id
+        comments_model.add(**values)
         return redirect(url_for('news.one', id=id))
     return render_template('one_news.html', title=news['title'], news=news, form=form)
 
@@ -98,7 +97,7 @@ def delete(id):
 
 @news.route('/comments/<int:id>', methods=['POST'])
 def comments(id):
-    comments = comments_model.getall(news_id=id)
+    comments = comments_model.appendone_getall(comments_model.getall(news_id=id), 'users', ['user_login', 'login'])
     return jsonify({'htmlresponse': render_template('comments.html', comments=comments)})
 
 

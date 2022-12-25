@@ -57,13 +57,13 @@
 {% endmacro %}
 
 
-{% macro render_profile_picture(size) %}
+{% macro render_profile_picture(image, size) %}
     {% if size %}
-        <object height="{{ size }}" width="{{ size }}" class="rounded-circle" data="{{ users_folder(logged_user().image) }}" type="image/png" style="object-fit: cover;">
+        <object height="{{ size }}" width="{{ size }}" class="rounded-circle" data="{{ image }}" type="image/png" style="object-fit: cover;">
             <img height="{{ size }}" width="{{ size }}" class="rounded-circle" src="https://i.pinimg.com/736x/c9/e3/e8/c9e3e810a8066b885ca4e882460785fa.jpg" alt="Profile picture" style="object-fit: cover;">
         </object>
     {% else %}
-        <object height="25" width="25" class="rounded-circle" data="{{ users_folder(logged_user().image) }}" type="image/png" style="object-fit: cover;">
+        <object height="25" width="25" class="rounded-circle" data="{{ image }}" type="image/png" style="object-fit: cover;">
             <img height="25" width="25" class="rounded-circle" src="https://i.pinimg.com/736x/c9/e3/e8/c9e3e810a8066b885ca4e882460785fa.jpg" alt="Profile picture" style="object-fit: cover;">
         </object>
     {% endif %}
@@ -87,11 +87,11 @@
 {% endmacro %}
 
 
-{% macro render_account_dropdown() %}
+{% macro render_account_dropdown(image) %}
     <div class="dropdown">
         <button class="btn dropdown-toggle" type="button" id="dropdownMenuButton"
             data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-            {{ render_author('Account') }}
+            {{ render_author('Account', image) }}
         </button>
         <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
             <a class="dropdown-item" href="{{ url_for('users.me') }}">Account</a>
@@ -112,7 +112,7 @@
                         src="{{ news_folder(one_news.cover) }}" alt="Cover">
                     <div class="card-img-overlay clickable" onclick="onNewsClick('{{ one_news.id }}')">
                         <div class="card-title text-white">
-                            {{ render_author(one_news.user_login) }}
+                            {{ render_author(one_news.user_login, users_folder(one_news.image)) }}
                         </div>
                     </div>
                     <div class="card-body">
@@ -138,7 +138,7 @@
 {% endmacro %}
 
 
-{% macro render_author(name, url) %}
+{% macro render_author(name, image, url) %}
 <div class="d-inline 
     {% if url %}
         clickable" onclick="onUserClick('{{ url }}')"
@@ -147,7 +147,7 @@
     {% endif %}
 >
     <div class="d-inline mx-1 align-middle">
-        {{ render_profile_picture() }}
+        {{ render_profile_picture(image) }}
     </div>
     <div class="d-inline">
         {{ name }}
@@ -157,13 +157,12 @@
 
 
 {% macro render_comments(comments) %}
-    <div class="gap-2">
     {% for comment in comments %}
-        <div class="card">
+        <div class="card my-3">
             <div class="card-body">
                 <h4 class="card-title">
                     <div class="d-inline-flex justify-content-between w-100">
-                        {{ render_author(comment.user_login, comment.user_login) }}
+                        {{ render_author(comment.user_login, users_folder(comment.image), comment.user_login) }}
                         {% if is_its_account(comment.user_login) %}
                             <div>
                                 {{ render_content_dropdown(url_for('news.edit_comment', id=comment.id), url_for('news.delete_comment', id=comment.id)) }}
@@ -178,7 +177,6 @@
             </div>
         </div>
     {% endfor %}
-    </div>
 {% endmacro %}
 
 

@@ -11,11 +11,15 @@ __cursor = __connect.cursor(dictionary=True)
 def count(table):
     query = f'SELECT COUNT(*) as count FROM {table}'
     __executeone(query, commit=False)
-    return __cursor.fetchall()
+    return __cursor.fetchall()[0]['count']
 
 
-def selectlike(table, column, text):
-    query = f'SELECT * FROM {table} WHERE {column} like {__value_quote(f"%{text}%")}'
+def selectlike(table, column, text, order_dict=None):
+    query = f'SELECT * FROM {table}'
+    query+= f' WHERE {column} like {__value_quote(f"%{text}%")}'
+    if order_dict:
+        order = __convert_to_order(order_dict)
+        query += f' ORDER BY {order}'
     __executeone(query, commit=False)
     return __cursor.fetchall()
 
@@ -44,8 +48,10 @@ def selectallin(table, in_dict, order_dict=None):
 
 
 def selectone(table, conditions_dict):
+    query = f'SELECT * FROM {table}'
     conditions = __convert_to_conditions(conditions_dict)
-    __executeone(f'SELECT * FROM {table} WHERE {conditions}', commit=False)
+    query += f' WHERE {conditions}'
+    __executeone(query, commit=False)
     return __cursor.fetchone()
 
 
@@ -86,7 +92,7 @@ def __convert_to_order(dict):
 def __convert_to_set(dict):
     list = []
     for key, value in dict.items():
-        list.append(f'{__column_quote(key)} = {__value_quote(value)}')
+        list.append(f'{key} = {__value_quote(value)}')
     return ', '.join(list)
 
 
@@ -94,7 +100,7 @@ def __convert_to_in_condition(dict):
     # TODO: Check if it's working
     list = []
     for key, value in dict.items():
-        list.append(f'{__column_quote(key)} in {__set_bracket(", ".join(value))}')
+        list.append(f'{key} in {__set_bracket(", ".join(value))}')
     return ' and '.join(list)
 
 
@@ -102,12 +108,12 @@ def __convert_to_conditions(dict):
     # TODO: Check if it's working
     list = []
     for key, value in dict.items():
-        list.append(f'{__column_quote(key)} = {__value_quote(value)}')
+        list.append(f'{key} = {__value_quote(value)}')
     return ' and '.join(list)
 
 
 def __convert_to_columns_values(dict):
-    columns_list = list(map(__column_quote, dict.keys()))
+    columns_list = list(dict.keys())
     columns_string = ', '.join(columns_list)
     values_list =list(map(__value_quote, dict.values()))
     values_string = ', '.join(values_list)
@@ -116,10 +122,6 @@ def __convert_to_columns_values(dict):
 
 def __set_bracket(str):
     return f'({str})'
-
-
-def __column_quote(str):
-    return f'`{str}`'
 
 
 def __value_quote(str):

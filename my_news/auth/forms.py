@@ -14,6 +14,11 @@ class LoginForm(FlaskForm):
         if not users_model.exists(field.data):
             raise ValidationError('Such user doesn\'t exist!')
 
+    
+    def validate_password(self, field):
+        if not users_model.auth(self.login.data, field.data):
+            raise ValidationError('Invalid password!')
+
 
 class SignupForm(FlaskForm):
     email = EmailField('Email', [DataRequired()])
