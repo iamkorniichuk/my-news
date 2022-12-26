@@ -35,8 +35,8 @@ class BaseModel:
         return self.getall(order)
 
 
-    def count(self):
-        return database.count(self.table)
+    def count(self, **kwargs):
+        return database.count(self.table, kwargs)
 
 
     def add(self, **kwargs):

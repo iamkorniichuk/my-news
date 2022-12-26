@@ -22,7 +22,7 @@ def all():
         news_model.add(**values)
         return redirect(url_for('news.all'))
     # TODO: To end search
-    fetched = news_model.search('title', request.args.get('text'), {'key':'posted_time', 'reverse':False})
+    fetched = news_model.search('title', request.args.get('search'), {'key':'posted_time', 'reverse':False})
     news = news_model.appendone_getall(fetched, 'users', ['user_login', 'login'])
     if is_admin():
         info = {}
@@ -79,7 +79,7 @@ def edit(id):
             values['cover'] = replace_file(old_cover, new_cover, news_folder())
             news_model.update(id, **values)
             return jsonify({'reload': True})
-        set_values_to_form(form, news)
+        set_values_to_form(form, news, news_folder)
         return jsonify({'htmlresponse': render_template('modal_form.html', form=form, action=url_for('news.edit', id=id))})
     abort(403)
 

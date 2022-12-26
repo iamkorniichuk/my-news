@@ -1,9 +1,7 @@
 {% extends "base.html" %}
+{% from 'macros.html' import render_users %}
 {% block content %}
-    {% for user in users %}
-        <div class="clickable" onclick="onUserClick('{{ user.login }}')" style="border: solid black 1px">
-            <b>{{ user.login }}</b>
-            <img class="pfp" src="{{ users_folder(user.image) }}" alt="Image">
-        </div>
-    {% endfor %}
+<div class="container px-5 py-2">
+    {{ render_users(users) }}
+</div>
 {% endblock content %}

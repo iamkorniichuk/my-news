@@ -8,8 +8,11 @@ __connect = mysql.connect(
 __cursor = __connect.cursor(dictionary=True)
 
 
-def count(table):
+def count(table, conditions_dict=None):
     query = f'SELECT COUNT(*) as count FROM {table}'
+    if conditions_dict:
+        conditions = __convert_to_conditions(conditions_dict)
+        query += f' WHERE {conditions}'
     __executeone(query, commit=False)
     return __cursor.fetchall()[0]['count']
 
