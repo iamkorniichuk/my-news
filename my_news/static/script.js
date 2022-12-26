@@ -54,6 +54,6 @@ function loadSection(url, id){
     });
 }
 
-function onLogoutClick(){
+function clearHistory(){
     localStorage.clear()
 }

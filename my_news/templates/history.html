@@ -10,6 +10,12 @@
         }
     });
 </script>
-<div class="container px-5 py-2" id="news">
+<div class="container px-5 py-2">
+    <div class="d-flex justify-content-between my-3">
+        <h3>My history</h3>
+        <button class="btn btn-danger" onclick="clearHistory(); location.reload()">Delete my whole history</button>
+    </div>
+    <div id="news">
+    </div>
 </div>
 {% endblock content %}
