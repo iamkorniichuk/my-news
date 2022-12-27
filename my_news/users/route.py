@@ -37,7 +37,7 @@ def me():
 
 
 def get_user_info(login):
-    return users_model.getone(login), news_model.appendone_getall(news_model.getall({'key':'posted_time', 'reverse': False}, user_login=login), 'users', ['user_login', 'login'])
+    return users_model.getone(login), news_model.appendone_getall(news_model.getall({'key':'posted_time', 'reverse': False}, user_login=login), users_model, ['user_login', 'login'])
 
 
 @users.route('/account/edit', methods=['POST'])

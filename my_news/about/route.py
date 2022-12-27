@@ -1,5 +1,6 @@
 from flask import Blueprint, render_template, redirect, url_for, request, jsonify, abort
 from my_news.models.reviews import reviews_model
+from my_news.models.users import users_model
 from .forms import *
 from my_news.utils.forms import set_values_to_form, get_values_from_form
 from my_news.utils.session import login_required, logged_user, is_its_account
@@ -22,7 +23,7 @@ def info():
             reviews_model.add(**values)
         return redirect(url_for('about.info'))
     fetched = reviews_model.search('body', request.args.get('search'), {'key':'stars', 'reverse':True})
-    reviews = reviews_model.appendone_getall(fetched, 'users', ['user_login', 'login'])
+    reviews = reviews_model.appendone_getall(fetched, users_model, ['user_login', 'login'])
     return render_template('about.html', title='About', reviews=reviews, form=form)
 
 

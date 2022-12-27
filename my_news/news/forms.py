@@ -1,11 +1,11 @@
-from wtforms import StringField, SubmitField, TextAreaField
+from wtforms import StringField, SubmitField, TextAreaField, MultipleFileField
 from wtforms.validators import DataRequired
 from flask_wtf import FlaskForm
-from flask_wtf.file import FileField, FileRequired, FileAllowed
 
 
 class CreateNewsForm(FlaskForm):
-    cover = FileField('Cover', [FileRequired(), FileAllowed(('jpg', 'png'))])
+    # TODO: To end multiple file filed uploading and selecting cover
+    images = MultipleFileField('Images', [DataRequired()])
     title = StringField('Title', [DataRequired()])
     body = TextAreaField('Body', [DataRequired()])
     submit = SubmitField('Post')

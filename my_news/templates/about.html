@@ -12,7 +12,7 @@
                 <h4 class="card-title">
                     <div class="d-inline-flex justify-content-between w-100">
                         <div class="d-inline gap-3">
-                            {{ render_author(review.user_login, users_folder(review.image), review.user_login) }}
+                            {{ render_author(review.user_login, review.image, review.user_login) }}
                         </div>
                         {% if is_its_account(review.user_login) %}
                             <div>

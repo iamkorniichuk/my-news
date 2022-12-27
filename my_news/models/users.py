@@ -1,11 +1,12 @@
 from .base import BaseModel
 from hashlib import sha512
+from my_news.utils.files import users_folder
 
 
 class UsersModel(BaseModel):
     def __init__(self):
-        super().__init__('users', 'login')
-
+        super().__init__('users', 'login', folder=users_folder)
+        
 
     def add(self, **kwargs):
         kwargs['password'] = self._hash(kwargs['password'])

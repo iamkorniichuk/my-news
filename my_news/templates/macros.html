@@ -26,7 +26,12 @@
                 <div class="mt-2">
                     <div class="form-group">
                         {{ field.label }}
-                        {{ field(class="form-control") }}
+                        <!-- TODO: To end preview -->
+                        {% if isinstance(field, (MultipleFileField, FileField)) %}
+                            {{ field(class="form-control", onchange="preview()") }}
+                        {% else %}
+                            {{ field(class="form-control") }}
+                        {% endif %}
                     </div>
                 </div>
                 {% if field.errors %}
@@ -38,6 +43,27 @@
                 {% endif %}
             {% endif %}
         {% endfor %}
+{% endmacro %}
+
+
+{% macro render_carousel(images) %}
+<div id="carouselExampleControls" class="carousel slide" data-bs-ride="carousel">
+    <div class="carousel-inner">
+    {% for image in images %}
+    <div class="carousel-item active">
+        <img src="{{ image }}" class="d-block w-100" alt="Image">
+      </div>
+    {% endfor %}
+    </div>
+    <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleControls" data-bs-slide="prev">
+      <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+      <span class="visually-hidden">Previous</span>
+    </button>
+    <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleControls" data-bs-slide="next">
+      <span class="carousel-control-next-icon" aria-hidden="true"></span>
+      <span class="visually-hidden">Next</span>
+    </button>
+  </div>
 {% endmacro %}
 
 
@@ -119,10 +145,10 @@
             <div class="col-4">
                 <div class="card h-100">
                     <img class="card-img-top"
-                        src="{{ news_folder(one_news.cover) }}" alt="Cover">
+                        src="{{ one_news.cover }}" alt="Cover">
                     <div class="card-img-overlay clickable" onclick="onNewsClick('{{ one_news.id }}')">
                         <div class="card-title text-white">
-                            {{ render_author(one_news.user_login, users_folder(one_news.image)) }}
+                            {{ render_author(one_news.user_login, one_news.image) }}
                         </div>
                     </div>
                     <div class="card-body">
@@ -172,7 +198,7 @@
             <div class="card-body">
                 <h4 class="card-title">
                     <div class="d-inline-flex justify-content-between w-100">
-                        {{ render_author(comment.user_login, users_folder(comment.image), comment.user_login) }}
+                        {{ render_author(comment.user_login, comment.image, comment.user_login) }}
                         {% if is_its_account(comment.user_login) %}
                             <div>
                                 {{ render_content_dropdown(url_for('news.edit_comment', id=comment.id), url_for('news.delete_comment', id=comment.id)) }}
@@ -196,7 +222,7 @@
             <div class="card-body">
                 <h4 class="card-title">
                     <div class="d-inline-flex justify-content-between w-100">
-                        {{ render_author(user.login, users_folder(user.image), user.login) }}
+                        {{ render_author(user.login, user.image, user.login) }}
                     </div>
                 </h4>
                 <p class="card-text">News written: {{ user.news_count }}</p>

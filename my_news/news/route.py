@@ -23,7 +23,7 @@ def all():
         return redirect(url_for('news.all'))
     # TODO: To end search
     fetched = news_model.search('title', request.args.get('search'), {'key':'posted_time', 'reverse':False})
-    news = news_model.appendone_getall(fetched, 'users', ['user_login', 'login'])
+    news = news_model.appendone_getall(fetched, users_model, ['user_login', 'login'])
     if is_admin():
         info = {}
         info['users'] = users_model.count()
@@ -41,7 +41,7 @@ def history():
         if ids:
             history = []
             for id in json.loads(ids):
-                news = news_model.appendone_getone(news_model.getone(id), 'users', ['user_login', 'login'])
+                news = news_model.appendone_getone(news_model.getone(id), users_model, ['user_login', 'login'])
                 if news:
                     history.append(news)
             history.reverse()
@@ -54,7 +54,7 @@ def history():
 @news.route('/news/<int:id>', methods=['POST', 'GET'])
 def one(id):
     form = CreateCommentForm()
-    news = news_model.appendone_getone(news_model.getone(id), 'users',  ['user_login', 'login'])
+    news = news_model.appendone_getone(news_model.getone(id), users_model, ['user_login', 'login'])
     if form.validate_on_submit():
         values = get_values_from_form(form)
         values['user_login'] = logged_user()['login']
@@ -79,7 +79,7 @@ def edit(id):
             values['cover'] = replace_file(old_cover, new_cover, news_folder())
             news_model.update(id, **values)
             return jsonify({'reload': True})
-        set_values_to_form(form, news, news_folder)
+        set_values_to_form(form, news)
         return jsonify({'htmlresponse': render_template('modal_form.html', form=form, action=url_for('news.edit', id=id))})
     abort(403)
 
@@ -97,7 +97,7 @@ def delete(id):
 
 @news.route('/comments/<int:id>', methods=['POST'])
 def comments(id):
-    comments = comments_model.appendone_getall(comments_model.getall(news_id=id), 'users', ['user_login', 'login'])
+    comments = comments_model.appendone_getall(comments_model.getall(news_id=id), users_model, ['user_login', 'login'])
     return jsonify({'htmlresponse': render_template('comments.html', comments=comments)})
 
 

@@ -1,4 +1,3 @@
-from PIL import Image
 from wtforms import SubmitField, FileField
 from wtforms.csrf.core import CSRFTokenField
 
@@ -6,11 +5,12 @@ from wtforms.csrf.core import CSRFTokenField
 service_fields = (CSRFTokenField, SubmitField)
 
 
-def set_values_to_form(form, values, folder=None):
+def set_values_to_form(form, values):
     for field in form:
         try:
             if isinstance(field, FileField):
-                field.data = open(folder(values[field.name]), 'r')
+                # TODO: TO end
+                field.data = open(values[field.name], 'r')
             else:
                 field.data = values[field.name]
         except:

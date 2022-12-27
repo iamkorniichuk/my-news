@@ -1,15 +1,18 @@
 {% extends "base.html" %}
-{% from 'macros.html' import render_form, render_profile_picture, render_divider, render_author %}
+{% from 'macros.html' import render_form, render_profile_picture, render_divider, render_author, render_carousel %}
 {% block script %}
     <script src="{{ url_for('static', filename='mark_read.js') }}"></script>
 {% endblock script %}
 {% block content %}
 <div class="container px-5 py-2">
-{{ render_author(news.user_login, users_folder(news.image), news.user_login) }}
+{{ render_author(news.user_login, news.image, news.user_login) }}
     <h1 class="mb-3">{{ news.title }}</h1>
     <div class="row">
         <div class="col">
-            <img class="float-start w-25 me-3 mb-3" src="{{ news_folder(news.cover) }}" alt="Cover"/>
+            <!-- TODO: To end carousel -->
+            <div class="float-start w-25 me-3 mb-3">
+                {{ render_carousel(news.images.insert(news.cover, 0)) }}
+            </div>
             <p>
                 {{ news.body }}
                 <br>

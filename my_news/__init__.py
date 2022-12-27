@@ -1,5 +1,6 @@
 from flask import Flask, request
-from wtforms import SubmitField
+from wtforms import SubmitField, MultipleFileField
+from flask_wtf.file import FileField
 from wtforms.csrf.core import CSRFTokenField
 from .configs import *
 from my_news.utils.session import is_logged, is_its_account, is_admin, logged_user
@@ -13,13 +14,13 @@ def create_app():
     
     app.jinja_env.globals['SubmitField'] = SubmitField
     app.jinja_env.globals['CSRFTokenField'] = CSRFTokenField
+    app.jinja_env.globals['MultipleFileField'] = MultipleFileField
+    app.jinja_env.globals['FileField'] = FileField
     app.jinja_env.globals['isinstance'] = isinstance
     app.jinja_env.globals['is_logged'] = is_logged
     app.jinja_env.globals['logged_user'] = logged_user
     app.jinja_env.globals['is_admin'] = is_admin
     app.jinja_env.globals['is_its_account'] = is_its_account
-    app.jinja_env.globals['news_folder'] = news_folder
-    app.jinja_env.globals['users_folder'] = users_folder
     app.jinja_env.globals['request'] = request
 
 
