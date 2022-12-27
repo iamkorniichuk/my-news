@@ -1,4 +1,4 @@
-from wtforms import SubmitField, FileField
+from wtforms import SubmitField, FileField, MultipleFileField
 from wtforms.csrf.core import CSRFTokenField
 
 
@@ -21,5 +21,13 @@ def get_values_from_form(form):
     values = {}
     for field in form:
         if not isinstance(field, service_fields):
-            values[field.name] = field.data
+            if isinstance(field, MultipleFileField):
+                print(f'Filename:{field.data[0].filename}!')
+                if field.data[0].filename:
+                    values[field.name] = field.data
+                else:
+                    values[field.name] = ''
+            else:
+                values[field.name] = field.data
+    print(values)
     return values

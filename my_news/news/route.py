@@ -4,7 +4,7 @@ from my_news.models.users import users_model
 from my_news.models.news import news_model
 from my_news.models.comments import comments_model
 from my_news.utils.session import login_required, logged_user, is_its_account, admin_required, is_admin
-from my_news.utils.files import save_file, news_folder, delete_file, replace_file
+from my_news.utils.files import save_file, save_files, news_folder, delete_file, replace_file
 from my_news.utils.forms import set_values_to_form, get_values_from_form
 
 
@@ -18,7 +18,9 @@ def all():
     if form.validate_on_submit():
         values = get_values_from_form(form)
         values['user_login'] = logged_user()['login']
+        # TODO: To end
         values['cover'] = save_file(values['cover'], news_folder())
+        values['images'] = save_files(values['images'], news_folder())
         news_model.add(**values)
         return redirect(url_for('news.all'))
     # TODO: To end search
@@ -55,6 +57,10 @@ def history():
 def one(id):
     form = CreateCommentForm()
     news = news_model.appendone_getone(news_model.getone(id), users_model, ['user_login', 'login'])
+    if news['images']:
+        news['images'].insert(0, news['cover'])
+    else:
+        news['images'] = None
     if form.validate_on_submit():
         values = get_values_from_form(form)
         values['user_login'] = logged_user()['login']

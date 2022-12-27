@@ -27,7 +27,13 @@ class BaseModel:
         for key in keys_to_convert:
             try:
                 if not dict[key].startswith('/'):
-                    dict[key] = self.folder(dict[key])
+                    if key == 'images':
+                        if dict[key]:
+                            dict[key] = dict[key].split(' ')
+                            for i in range(len(dict[key])):
+                                dict[key][i] = self.folder(dict[key][i])
+                    else:
+                        dict[key] = self.folder(dict[key])
             except:
                 continue
         return dict

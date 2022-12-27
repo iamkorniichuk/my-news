@@ -11,7 +11,11 @@
         <div class="col">
             <!-- TODO: To end carousel -->
             <div class="float-start w-25 me-3 mb-3">
-                {{ render_carousel(news.images.insert(news.cover, 0)) }}
+                {% if news.images %}
+                    {{ render_carousel(news.images) }}
+                {% else %}
+                    <img class="w-100" src="{{ news.cover }}" alt="Cover">
+                {% endif %}
             </div>
             <p>
                 {{ news.body }}

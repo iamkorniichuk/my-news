@@ -50,9 +50,13 @@
 <div id="carouselExampleControls" class="carousel slide" data-bs-ride="carousel">
     <div class="carousel-inner">
     {% for image in images %}
-    <div class="carousel-item active">
-        <img src="{{ image }}" class="d-block w-100" alt="Image">
-      </div>
+        {% if loop.index0 == 0 %}
+            <div class="carousel-item active">
+        {% else %}
+            <div class="carousel-item">
+        {% endif %}
+            <img src="{{ image }}" class="d-block w-100" alt="Image">
+        </div>
     {% endfor %}
     </div>
     <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleControls" data-bs-slide="prev">

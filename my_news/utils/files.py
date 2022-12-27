@@ -17,6 +17,13 @@ def news_folder(file=None):
     return url_for('static', filename=name)
 
 
+def save_files(files, folder):
+    names = []
+    for file in files:
+        names.append(save_file(file, folder))
+    return ' '.join(names)
+
+
 def save_file(file, folder):
     name = get_unique_filename(folder)
     file.save(current_app.root_path + folder + name)
