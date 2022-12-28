@@ -113,7 +113,7 @@ def delete(id):
 
 @news.route('/comments/<int:id>', methods=['POST'])
 def comments(id):
-    comments = comments_model.appendone_getall(comments_model.getall(news_id=id), users_model, ['user_login', 'login'])
+    comments = comments_model.appendone_getall(comments_model.getall({'key': 'posted_time', 'reverse': False}, news_id=id), users_model, ['user_login', 'login'])
     return jsonify({'htmlresponse': render_template('comments.html', comments=comments)})
 
 

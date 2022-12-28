@@ -58,7 +58,7 @@ def edit():
         add_session_user(logged_user()['login'])
         users_model.update(logged_user()['login'], **values)
         return redirect(url_for('users.me'))
-    set_values_to_form(form, logged_user(), users_folder)
+    set_values_to_form(form, logged_user())
     return jsonify({'htmlresponse': render_template('modal_form.html', form=form, action=url_for('users.edit'))})
 
 
