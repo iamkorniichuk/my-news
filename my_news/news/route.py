@@ -4,7 +4,7 @@ from my_news.models.users import users_model
 from my_news.models.news import news_model
 from my_news.models.comments import comments_model
 from my_news.utils.session import login_required, logged_user, is_its_account, admin_required, is_admin
-from my_news.utils.files import save_file, save_files, news_folder, delete_file, replace_file
+from my_news.utils.files import save_file, save_files, news_folder, delete_file, delete_files, replace_files, replace_file
 from my_news.utils.forms import set_values_to_form, get_values_from_form
 
 
@@ -18,7 +18,6 @@ def all():
     if form.validate_on_submit():
         values = get_values_from_form(form)
         values['user_login'] = logged_user()['login']
-        # TODO: To end
         values['cover'] = save_file(values['cover'], news_folder())
         values['images'] = save_files(values['images'], news_folder())
         news_model.add(**values)
@@ -82,7 +81,17 @@ def edit(id):
             values = get_values_from_form(form)
             old_cover = news['cover']
             new_cover = values['cover']
-            values['cover'] = replace_file(old_cover, new_cover, news_folder())
+            old_images = news['images']
+            new_images = values['images']
+            values['cover'] = replace_file(old_cover,  new_cover, news_folder())
+            if old_images and new_images:
+                values['images'] = replace_files(old_images,  new_images, news_folder())
+            elif old_images:
+                delete_files(old_images, news_folder())
+            elif new_images:
+                values['images'] = save_files(new_images, news_folder())
+            else:
+                del values['images']
             news_model.update(id, **values)
             return jsonify({'reload': True})
         set_values_to_form(form, news)
@@ -93,9 +102,10 @@ def edit(id):
 @news.route('/news/delete/<int:id>', methods=['POST'])
 @admin_required
 def delete(id):
-    post = news_model.getone(id)
-    if is_its_account(post['user_login']):
-        delete_file(post['cover'], news_folder())
+    news = news_model.getone(id)
+    if is_its_account(news['user_login']):
+        delete_file(news['cover'], news_folder())
+        delete_files(news['images'], news_folder())
         news_model.delete(id)
         return redirect(url_for('news.all'))
     abort(403)

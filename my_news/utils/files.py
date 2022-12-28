@@ -30,11 +30,21 @@ def save_file(file, folder):
     return name
 
 
+def delete_files(files, folder):
+    for file in files:
+        delete_file(file, folder)
+
+
 def delete_file(file, folder):
     path = current_app.root_path + folder + file
     if os.path.exists(path) and file:
         os.chmod(path, 0o777)
         os.remove(path)
+
+
+def replace_files(olds, news, folder):
+    delete_files(olds, folder)
+    return save_files(news, folder)
 
 
 def replace_file(old, new, folder):
