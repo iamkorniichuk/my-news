@@ -19,7 +19,8 @@
                 {{ continue }}
             {% elif isinstance(field, SubmitField) %}
             <div class="d-flex justify-content-end btn-toolbar mt-3">
-                <input class="btn btn-regular px-5" type="reset" value="Clear"/>
+                <!-- TODO: TO end clear button (delete previews) -->
+                <input class="btn btn-regular px-5" type="reset" value="Clear" onclick="clearForm(this)"/>
                 {{ field(class="btn btn-primary px-5 ml-3") }}
             </div>
             {% else %}
@@ -28,7 +29,8 @@
                         {{ field.label }}
                         <!-- TODO: To end preview -->
                         {% if isinstance(field, (MultipleFileField, FileField)) %}
-                            {{ field(class="form-control", onchange="preview()") }}
+                            {{ field(class="form-control", onchange="previewImages(this)") }}
+                            <div class="preview d-inline"></div>
                         {% else %}
                             {{ field(class="form-control") }}
                         {% endif %}
