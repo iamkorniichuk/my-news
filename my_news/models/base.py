@@ -46,8 +46,12 @@ class BaseModel:
 
 
     def appendone_getone(self, fetched, model, linked_keys):
-        kwargs = {linked_keys[1]: fetched[linked_keys[0]]}
-        return model.getall(**kwargs)[0] | fetched
+        try:
+            kwargs = {linked_keys[1]: fetched[linked_keys[0]]}
+            result = model.getall(**kwargs)[0] | fetched
+        except:
+            result = fetched
+        return result
 
 
     @convert_filenames_to_path
