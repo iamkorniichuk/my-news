@@ -21,7 +21,6 @@ def getall():
 @reviews.route('/add', methods=['POST'])
 @logged_user.login_required
 def add():
-    # TODO: Setting previous values to form
     form = CreateReviewForm()
     login = logged_user.info['login']
     review = models.reviews.getone(login)
@@ -34,7 +33,9 @@ def add():
         else:
             values['user_login'] = logged_user.info['login']
             models.reviews.add(**values)
-        return jsonify({'status': True})
+        review = models.reviews.getone(login)
+        set_values_to_form(form, review)
+        return jsonify({'status': True, 'html': render_template('modules/form.html', form=form, object='reviews_form')})
     return jsonify({'html': render_template('modules/form.html', form=form, object='reviews_form')})
 
 

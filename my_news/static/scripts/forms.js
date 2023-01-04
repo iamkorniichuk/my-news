@@ -23,12 +23,13 @@ class Form extends Section{
             type: 'post',
             success: 
                 function(data){
-                    if(data.html){
-                        obj.render(data)
-                    }else{
+                    if(data.status){
+                        if(data.html) obj.render(data)
                         form.reset()
                         deletePreviews(form)
                         onSuccessStatus()
+                    }else{
+                        obj.render(data)
                     }
                 }
         });
