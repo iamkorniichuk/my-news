@@ -1,4 +1,4 @@
-from flask import Flask, request
+from flask import Flask, request, render_template
 from wtforms import SubmitField, MultipleFileField
 from flask_wtf.file import FileField
 from wtforms.csrf.core import CSRFTokenField
@@ -11,6 +11,11 @@ app = Flask(__name__)
 app.template_folder = 'my_news/templates'
 app.static_folder = 'my_news/static'
 app.config.from_mapping(**app_development)
+
+
+@app.errorhandler(Exception)
+def error(error):
+    return render_template('pages/error.html', title='Error', header='Something went wrong!', message=error.description)
 
     
 app.jinja_env.globals['SubmitField'] = SubmitField
