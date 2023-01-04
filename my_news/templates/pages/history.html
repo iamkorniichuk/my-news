@@ -1,0 +1,23 @@
+{% extends "pages/base.html" %}
+
+
+{% block content %}
+<div class="container px-5 py-2">
+    <div class="d-flex justify-content-between my-3">
+        <h3>My history</h3>
+        <button class="btn btn-danger" onclick="clearHistory(); render_history()">Delete my whole history</button>
+    </div>
+    <div id="history_section"></div>
+    <!-- TODO: Change dropdown to delete from history -->
+    <script>
+        function render_history(){
+            history_section.url = '{{ url_for("history.get") }}'
+            history_section.request({'history': localStorage.getItem('history')})
+        }
+
+        $(this).ready(function() {
+            render_history()
+        })
+    </script>
+</div>
+{% endblock content %}

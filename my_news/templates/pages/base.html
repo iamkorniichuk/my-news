@@ -1,0 +1,23 @@
+{% from 'macros/controls.html' import render_scripts, render_stylesheets, render_navbar, render_modal %}
+
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>{{ title }}</title>
+    {{ render_scripts() }}
+    {{ render_stylesheets() }}
+</head>
+<body>
+    {{ render_navbar() }}
+    {% block content %}
+    {% endblock content %}
+    {{ render_modal() }}
+    <footer class="page-footer bg-light p-5 w-100">
+        <div class="text-center">
+            Vitalii Korniichuk ©
+        </div>
+    </footer>
+</body>
+</html>

@@ -1,0 +1,28 @@
+{% extends "pages/base.html" %}
+{% from 'macros/controls.html' import render_divider %}
+
+
+{% block content %}
+<div class="container px-5 py-2">
+    {% if logged_user %}
+        <div id="reviews_form"></div>
+        <script>
+            $(this).ready(function() {
+                reviews_form.url = '{{ url_for("reviews.add") }}'
+                reviews_form.request()
+            })
+        </script>
+        {{ render_divider() }}
+    {% endif %}
+    <div id="reviews_section"></div>
+    <script>
+        $(this).ready(function() {
+            reviews_section.url = '{{ url_for("reviews.getall") }}'
+            reviews_section.request()
+            reviews_form.onSuccessCheck = function(){
+                reviews_section.request().bind(reviews_section);
+            }
+        })
+    </script>
+</div>
+{% endblock content %}

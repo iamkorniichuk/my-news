@@ -1,0 +1,25 @@
+{% extends "pages/base.html" %}
+{% from 'macros/controls.html' import render_content_dropdown, render_profile_picture, render_divider %}
+{% from 'macros/models.html' import render_news %}
+
+
+{% block content %}
+<div class="container px-5 py-2">
+    <div id="user_section"></div>
+    <script>
+        $(this).ready(function() {
+            user_section.url = '{{ url_for("users.getone", login=login) }}'
+            user_section.request()
+        })
+    </script>
+    {{ render_divider() }}
+    <div id="news_section"></div>
+    <script>
+        $(this).ready(function() {
+            news_section.url = '{{ url_for("news.getusers", login=login) }}'
+            news_section.request()
+        })
+    </script>
+    </div>
+</div>
+{% endblock content %}

@@ -1,0 +1,46 @@
+{% macro render_form(form) %}
+    <form method="POST" enctype="multipart/form-data">
+        {{ render_fields(form) }}
+    </form>
+{% endmacro %}
+
+
+{% macro render_modal_form(form) %}
+    <form id="modal_form" enctype="multipart/form-data" onsubmit="event.preventDefault(); modal.check()">
+        {{ render_fields(form) }}
+    </form>
+{% endmacro %}
+
+
+{% macro render_fields(form) %}
+    {{ form.hidden_tag() }}
+        {% for field in form %}
+            {% if isinstance(field, CSRFTokenField) %}
+                {{ continue }}
+            {% elif isinstance(field, SubmitField) %}
+            <div class="d-flex justify-content-end btn-toolbar mt-3">
+                <input class="btn btn-regular px-5" type="reset" value="Clear" onclick="deletePreviews(this)"/>
+                {{ field(class="btn btn-primary px-5 ml-3") }}
+            </div>
+            {% else %}
+                <div class="mt-2">
+                    <div class="form-group">
+                        {{ field.label }}
+                        {% if isinstance(field, (MultipleFileField, FileField)) %}
+                            {{ field(class="form-control", onchange="previewImages(this)") }}
+                            <div class="preview d-inline"></div>
+                        {% else %}
+                            {{ field(class="form-control") }}
+                        {% endif %}
+                    </div>
+                </div>
+                {% if field.errors %}
+                    {% for error in field.errors %}
+                    <div class="text-danger">
+                        {{ error }}
+                    </div>
+                    {% endfor %}
+                {% endif %}
+            {% endif %}
+        {% endfor %}
+{% endmacro %}

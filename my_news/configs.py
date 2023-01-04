@@ -3,7 +3,7 @@ from .instance.config import *
 
 # TODO: Secure SECRET_KEY
 app_development = {'DEBUG': True,
-                'UPLOAD_FOLDER': os.path.join('static/' + 'files/'),
+                'UPLOAD_FOLDER': 'static/' + 'files/',
                 'SECRET_KEY': 'ha'}
 
 

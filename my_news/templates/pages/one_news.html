@@ -1,0 +1,41 @@
+{% extends "pages/base.html" %}
+{% from 'macros/forms.html' import render_form %}
+{% from 'macros/models.html' import render_one_news %}
+{% from 'macros/controls.html' import render_profile_picture, render_divider, render_author, render_carousel, render_content_dropdown %}
+
+
+{% block content %}
+<div class="container px-5 py-2">
+    <div id="one_news_section">
+    </div>
+    <script>
+        $(this).ready(function() {
+            one_news_section.url = '{{ url_for("news.getone", id=id) }}'
+            one_news_section.request()
+            addToHistory('{{ id }}')
+        })
+    </script>
+    {{ render_divider() }}
+    {% if logged_user %}
+    <div id="comments_form">
+    </div>
+    <script>
+        $(this).ready(function() {
+            comments_form.url = '{{ url_for("comments.add", news_id=id) }}'
+            comments_form.request()
+            //TODO: Pass comments' filters' data
+        })
+    </script>
+    {% endif %}
+    <div id="comments_section" class="my-3">
+    </div>
+    <script>
+        $(this).ready(function() {
+            comments_section.url = '{{ url_for("comments.getall", news_id=id) }}'
+            comments_section.request()
+            comments_form.onSuccessCheck = comments_section.request.bind(comments_section)
+            //TODO: Pass comments' filters' data
+        })
+    </script>
+</div>
+{% endblock content %}

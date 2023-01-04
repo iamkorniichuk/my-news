@@ -1,0 +1,157 @@
+{% from 'macros/controls.html' import render_profile_picture, render_author, render_content_dropdown, render_carousel %}
+
+
+{% macro render_news(news) %}
+    <div id="news_section" class="row gx-3 gy-3">
+        {% for row in news %}
+            <div class="col-lg-4">
+                <div class="card h-100">
+                    <img class="card-img-top"
+                        src="{{ row.cover }}" alt="Cover">
+                    <div class="card-img-overlay clickable" onclick="redirectToNews('{{ row.id }}')">
+                        <div class="card-title text-white">
+                            {{ render_author(row.user_login, row.image) }}
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <h5 class="card-title d-flex justify-content-between">{{ row.title }}
+                        {% if logged_user.is_its_account(row.user_login) %}
+                            {{ render_content_dropdown('news_section', 'news.edit', 'news.delete', id=row.id) }}
+                        {% endif %}
+                        </h5>
+                        <p class="card-text text-truncate">
+                            {{ row.body }}
+                        </p>
+                    </div>
+                    <div class="card-footer">
+                        <small class="text-muted">{{ row.posted_time }}</small>
+                    </div>
+                </div>
+            </div>
+            {% if loop.index % 3 == 0 %}
+                <div class="w-100"></div>
+            {% endif %}
+        {% endfor %}
+    </div>
+{% endmacro %}
+
+
+{% macro render_one_news(news) %}
+{{ render_author(news.user_login, news.image, news.user_login) }}
+    <h1 class="d-flex justify-content-between mb-3">
+        {{ news.title }}
+        {% if logged_user.is_its_account(news.user_login) %}
+            {{ render_content_dropdown('one_news_section', 'news.edit', 'news.delete', url_for('pages.news'), id=news.id) }}
+        {% endif %}
+    </h1>
+    <div class="row">
+        <div class="col">
+            <div class="float-start w-50 me-3 mb-3 ratio ratio-4x3">
+                {% if news.images %}
+                    {{ render_carousel(news.images) }}
+                {% else %}
+                    <img class="w-100" src="{{ news.cover }}" alt="Cover">
+                {% endif %}
+            </div>
+            <p>
+                {{ news.body }}
+                <br>
+                <small class="text-muted">{{ news.posted_time }}</small>
+            </p>
+         </div>
+    </div>
+{% endmacro %}
+
+
+{% macro render_user(user) %}
+<div class="d-flex">
+    <div class="flex-shrink-0">
+    {{ render_profile_picture(user.image, 150) }}
+    </div>
+    <div class="flex-grow-1 mx-4">
+        <h3 class="m-0">
+            {% if user.first_name %}
+                {{ user.first_name }}
+            {% endif %}
+            {% if user.last_name %}
+                {{ user.last_name }}
+            {% endif %}
+        </h3>
+        <p class="text-muted pb-0">
+            {{ user.login }}
+        </p>
+        <p class="py-0">
+            {{ user.description }}
+        </p>
+    </div>
+    {{ render_content_dropdown('user_section', 'users.edit', 'users.delete') }}
+</div>
+{% endmacro %}
+
+
+{% macro render_users(users) %}
+    {% for row in users %}
+        <div class="card my-3">
+            <div class="card-body">
+                <h4 class="card-title">
+                    <div class="d-inline-flex justify-content-between w-100">
+                        {{ render_author(row.login, row.image, row.login) }}
+                    </div>
+                </h4>
+                <p class="card-text">News written: {{ row.news_count }}</p>
+            </div>
+        </div>
+    {% endfor %}
+{% endmacro %}
+
+
+{% macro render_comments(comments) %}
+    {% for row in comments %}
+        <div class="card my-3">
+            <div class="card-body">
+                <h4 class="card-title">
+                    <div class="d-inline-flex justify-content-between w-100">
+                        {{ render_author(row.user_login, row.image, row.user_login) }}
+                        {% if logged_user.is_its_account(row.user_login) %}
+                            <div>
+                                {{ render_content_dropdown('comments_section', 'comments.edit', 'comments.delete', id=row.id) }}
+                            </div>
+                        {% endif %}
+                    </div>
+                </h4>
+                <p class="card-text">{{ row.body }}</p>
+            </div>
+            <div class="card-footer">
+                {{ row.posted_time }}
+            </div>
+        </div>
+    {% endfor %}
+{% endmacro %}
+
+
+{% macro render_reviews(reviews) %}
+{% for row in reviews %}
+<div class="card my-3">
+    <div class="card-body">
+        <h4 class="card-title">
+            <div class="d-inline-flex justify-content-between w-100">
+                <div class="d-inline gap-3">
+                    {{ render_author(row.user_login, row.image, row.user_login) }}
+                </div>
+                {% if logged_user.is_its_account(row.user_login) %}
+                    <div>
+                        {{ render_content_dropdown('reviews_section', 'reviews.edit', 'reviews.delete') }}
+                    </div>
+                {% endif %}
+            </div>
+        </h4>
+        <p class="card-text">
+            <h5>
+                {% for i in range(row.stars) %}★{% endfor %}{% for i in range(5-row.stars) %}☆{% endfor %}
+            </h5>
+            {{ row.body }}
+        </p>
+    </div>
+</div>
+{% endfor %}
+{% endmacro %}

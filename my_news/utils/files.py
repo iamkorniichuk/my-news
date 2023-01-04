@@ -3,6 +3,10 @@ import os
 import secrets
 
 
+def get_full_path(path):
+    return current_app.root_path + '/my_news/' + path
+
+
 def users_folder(file=None):
     name = 'files/users/'
     if file:
@@ -18,16 +22,19 @@ def news_folder(file=None):
 
 
 def save_files(files, folder):
-    names = []
-    for file in files:
-        names.append(save_file(file, folder))
-    return ' '.join(names)
+    if files:
+        names = []
+        for file in files:
+            names.append(save_file(file, folder))
+        return ' '.join(names)
+
 
 
 def save_file(file, folder):
-    name = get_unique_filename(folder)
-    file.save(current_app.root_path + folder + name)
-    return name
+    if file:
+        name = get_unique_filename(folder)
+        file.save(get_full_path(folder + name))
+        return name
 
 
 def delete_files(files, folder):
@@ -36,7 +43,7 @@ def delete_files(files, folder):
 
 
 def delete_file(file, folder):
-    path = current_app.root_path + folder + file
+    path = get_full_path(folder + file)
     if os.path.exists(path) and file:
         os.chmod(path, 0o777)
         os.remove(path)

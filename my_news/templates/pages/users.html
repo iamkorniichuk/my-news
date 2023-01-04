@@ -1,0 +1,18 @@
+{% extends "pages/base.html" %}
+{% from 'macros/models.html' import render_users %}
+
+
+{% block content %}
+<div class="container px-5 py-2">
+    <div id="users_section">
+
+    </div>
+    <script>
+        $(this).ready(function() {
+            users_section.url = '{{ url_for("users.getall") }}'
+            users_section.request()
+            //TODO: Pass comments' filters' data
+        })
+    </script>
+</div>
+{% endblock content %}
