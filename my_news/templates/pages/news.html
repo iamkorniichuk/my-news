@@ -6,24 +6,32 @@
 
 
 {% block content %}
-<div class="container px-5 py-2">
-    {% if logged_user.is_admin %}
-        <div id="news_form"></div>
+    <div class="container px-5 py-2">
+        {% if logged_user.is_admin %}
+            <div class="row">
+                <div id="news_form" class="col-lg"></div>
+                <div id="info_section" class="col-lg mt-3"></div>
+            </div>
+        {{ render_divider() }}
         <script>
             $(this).ready(function() {
                 news_form.url = '{{ url_for("news.add") }}'
                 news_form.request()
+                info_section.url = '{{ url_for("info.getshort") }}'
+                info_section.request()
             })
         </script>
-        {{ render_divider() }}
         {% endif %}
         <div id="news_section"></div>
-        <script>
-            $(this).ready(function() {
-                news_section.url = '{{ url_for("news.getall") }}'
-                news_section.request()
-                news_form.onSuccessCheck = news_section.request.bind(news_section)
-            })
-        </script>
-</div>
+    </div>
+    <script>
+        $(this).ready(function() {
+            news_section.url = '{{ url_for("news.getall") }}'
+            news_section.request()
+            news_form.onSuccessCheck = function() {
+                news_section.request().bind(news_section);
+                info_section.request().bind(info_section)
+            }
+        })
+    </script>
 {% endblock content %}

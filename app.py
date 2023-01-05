@@ -37,11 +37,13 @@ from my_news.blueprints.comments.route import comments
 from my_news.blueprints.reviews.route import reviews
 from my_news.blueprints.history.route import history
 from my_news.blueprints.pages.route import pages
+from my_news.blueprints.info.route import info
 app.register_blueprint(auth, url_prefix='/auth')
 app.register_blueprint(news, url_prefix='/news')
 app.register_blueprint(users, url_prefix='/users')
 app.register_blueprint(comments, url_prefix='/comments')
 app.register_blueprint(reviews, url_prefix='/reviews')
 app.register_blueprint(history, url_prefix='/history')
+app.register_blueprint(info, url_prefix='/info')
 app.register_blueprint(pages)
 

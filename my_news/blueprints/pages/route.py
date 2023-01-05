@@ -6,9 +6,6 @@ from my_news.utils.session import logged_user
 pages = Blueprint('pages',  __name__)
 
 
-
-
-
 @pages.route('/')
 @pages.route('/news')
 def news():
@@ -47,3 +44,9 @@ def about():
 @pages.route('/history')
 def history():
     return render_template('pages/history.html', title='History')
+
+
+@pages.route('/info')
+@logged_user.admin_required
+def info():
+    return render_template('pages/info.html', title='Info')

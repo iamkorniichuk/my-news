@@ -28,7 +28,7 @@
                         {{ field.label }}
                         {% if isinstance(field, (MultipleFileField, FileField)) %}
                             {{ field(class="form-control", onchange="previewImages(this)") }}
-                            <div class="preview d-inline"></div>
+                            <div class="preview row my-1"></div>
                         {% elif isinstance(field, RadioField) %}
                             <br>
                             <div class="star-rating btn-group" data-bs-toggle="buttons">

@@ -147,23 +147,14 @@
 
 {% macro render_info_cards(info) %}
 <div class="col d-grid gap-3">
+    {% for key, value in info.items() %}
     <div class="card">
         <div class="card-body">
-            <h4 class="card-title">Users registered</h4>
-            <p class="card-text">{{ info.users }} users</p>
+            <h4 class="card-title">{{ key }}</h4>
+            <p class="card-text">{{ value }}</p>
         </div>
     </div>
-    <div class="card">
-        <div class="card-body">
-            <h4 class="card-title">News created</h4>
-            <p class="card-text"></p>{{ info.news }} news</p>
-        </div>
-    </div> <div class="card">
-        <div class="card-body">
-            <h4 class="card-title">Comments written</h4>
-            <p class="card-text"></p>{{ info.comments }} comments</p>
-        </div>
-    </div>
+    {% endfor %}
 </div>
 {% endmacro %}
 
@@ -224,8 +215,12 @@
             </div>
             <ul class="navbar-nav">
                 {% if logged_user %}
-                <!-- TODO: add info -->
-                <li>
+                    {% if logged_user.is_admin %}
+                        <li class="nav-item">
+                            <a class="nav-link{% if route == 'info' %} active{% endif %}" href="{{ url_for('pages.info') }}">Info</a>
+                        </li>
+                    {% endif %}
+                <li class="nav-item">
                     {{ render_account_dropdown(logged_user.info.image) }}
                 </li>
                 {% else %}

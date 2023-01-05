@@ -8,11 +8,16 @@ function previewImages(field){
             var reader = new FileReader();
 
             reader.onload = function (e) {
+                let wrap = document.createElement('div')
+                wrap.classList.add('col-4')
+
                 let img = document.createElement('img')
                 img.src = e.target.result
-                img.classList.add('my-1')
                 img.classList.add('w-100')
-                div.appendChild(img)
+                img.classList.add('m-1')
+
+                wrap.appendChild(img)
+                div.appendChild(wrap)
             }
 
             reader.readAsDataURL(image)
