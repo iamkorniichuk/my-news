@@ -1,0 +1,31 @@
+{% from 'macros/controls.html' import render_author %}
+
+
+<div id="news_section" class="row gx-3 gy-3">
+    {% for row in history %}
+        <div class="col-lg-4">
+            <div class="card h-100">
+                <img class="card-img-top"
+                    src="{{ row.cover }}" alt="Cover">
+                <div class="card-img-overlay clickable" onclick="redirectToNews('{{ row.id }}')">
+                    <div class="card-title text-white">
+                        {{ render_author(row.user_login, row.image) }}
+                    </div>
+                </div>
+                <div class="card-body">
+                    <h5 class="card-title d-flex justify-content-between">{{ row.title }}
+                    </h5>
+                    <p class="card-text text-truncate">
+                        {{ row.body }}
+                    </p>
+                </div>
+                <div class="card-footer">
+                    <small class="text-muted">{{ row.posted_time }}</small>
+                </div>
+            </div>
+        </div>
+        {% if loop.index % 3 == 0 %}
+            <div class="w-100"></div>
+        {% endif %}
+    {% endfor %}
+</div>

@@ -41,10 +41,12 @@ class Section{
 
     request(data=null) {
         let obj = this
+        let params = new URLSearchParams(window.location.search)
+        let json = JSON.stringify(Object.fromEntries(params))
         if(!data){
-            let params = new URLSearchParams(window.location.search)
-            data = {'search': JSON.stringify(Object.fromEntries(params))}
-            console.log(data)
+            data = {'search': json}
+        }else{
+            data['search'] = json
         }
         $.ajax({
             async: false,

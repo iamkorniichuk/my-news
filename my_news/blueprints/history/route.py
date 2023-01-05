@@ -14,7 +14,11 @@ def get():
             news = models.news.appendone_getone(models.news.getone(id), models.users, ['user_login', 'login'])
             if news:
                 all_history.append(news)
-        all_history.reverse()
-        return jsonify({'html': render_template('modules/news_covers.html', news=all_history)})
+        values = request.form.get('search')
+        if values:
+            values = json.loads(values)
+            if 'reverse' in values.keys():
+                if values['reverse'] == 'on': all_history.reverse()
+        return jsonify({'html': render_template('modules/history.html', history=all_history)})
     else:
         return jsonify({'html': render_template('modules/error.html', message='No news in history yet')})
