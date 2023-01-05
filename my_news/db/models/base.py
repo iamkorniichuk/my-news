@@ -81,7 +81,6 @@ class BaseModel:
 
 
     def add(self, **kwargs):
-        # TODO: INSERT QUOTES IN
         core.insertone(self.table, kwargs)
 
 

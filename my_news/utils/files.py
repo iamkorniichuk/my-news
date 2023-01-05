@@ -43,10 +43,11 @@ def delete_files(files, folder):
 
 
 def delete_file(file, folder):
-    path = get_full_path(folder + file)
-    if os.path.exists(path) and file:
-        os.chmod(path, 0o777)
-        os.remove(path)
+    if file:
+        path = get_full_path(folder + file)
+        if os.path.exists(path):
+            os.chmod(path, 0o777)
+            os.remove(path)
 
 
 def replace_files(olds, news, folder):

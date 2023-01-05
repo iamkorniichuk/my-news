@@ -52,7 +52,7 @@
 
 
 {% macro render_search_bar(key) %}
-{# TODO: To end search #}
+{% if key != 'hide' %}
     <form class="input-group">
         <label class="btn btn-outline-secondary my-2 my-sm-0">
             <input name="reverse" type="checkbox" class="btn-check" onclick="changeIcon(this, ['fa-sort-amount-desc', 'fa-sort-amount-asc'])">
@@ -63,6 +63,7 @@
             <i class="fa fa-search"></i>
         </button>
     </form>
+{% endif %}
 {% endmacro %}
 
 
@@ -177,6 +178,8 @@
             {% set placeholder = 'Title' %}
         {% elif route == 'users' %}
             {% set placeholder = 'Login' %}
+        {% else %}
+            {% set placeholder = 'hide' %}
         {% endif %}
         <div class="d-lg-none">
             {{ render_search_bar(placeholder) }}
@@ -187,7 +190,6 @@
         </button>
         <div class="collapse navbar-collapse justify-content-between" id="navbarSupportedContent">
             <ul class="navbar-nav">
-                <!-- TODO: To refactor -->
                 <li class="nav-item">
                     {% if route == 'news' %}
                         <a class="nav-link active" href="{{ url_for('pages.news') }}">News</a>

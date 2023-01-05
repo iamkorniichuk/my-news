@@ -23,7 +23,6 @@
         $(this).ready(function() {
             comments_form.url = '{{ url_for("comments.add", news_id=id) }}'
             comments_form.request()
-            //TODO: Pass comments' filters' data
         })
     </script>
     {% endif %}
@@ -34,7 +33,6 @@
             comments_section.url = '{{ url_for("comments.getall", news_id=id) }}'
             comments_section.request()
             comments_form.onSuccessCheck = comments_section.request.bind(comments_section)
-            //TODO: Pass comments' filters' data
         })
     </script>
 </div>
