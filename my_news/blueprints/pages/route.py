@@ -1,8 +1,12 @@
 from flask import Blueprint, render_template, redirect, url_for
+import my_news.db.models as models
 from my_news.utils.session import logged_user
 
 
 pages = Blueprint('pages',  __name__)
+
+
+
 
 
 @pages.route('/')
@@ -25,8 +29,8 @@ def users():
 def user(login):
     if login == logged_user.info['login']:
         return redirect(url_for('pages.account'))
-    # TODO: Set full_name/login to title
-    return render_template('pages/user.html', title='User', login=login)
+    name = models.users.getone(login)['login']
+    return render_template('pages/user.html', title=name, login=login)
 
 
 @pages.route('/account')

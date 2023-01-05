@@ -6,7 +6,6 @@ __connect = mysql.connect(
      **database_development
      )
 __cursor = __connect.cursor(dictionary=True, buffered=True)
-# TODO: To refactor: look how SqlAlchemy implements all and 'steal' it :)
 
 def count(table, conditions_dict=None):
     query = f'SELECT COUNT(*) as count FROM {table}'
@@ -17,9 +16,12 @@ def count(table, conditions_dict=None):
     return __cursor.fetchall()[0]['count']
 
 
-def selectlike(table, column, text, order_dict=None):
-    query = f'SELECT * FROM {table}'
-    query+= f' WHERE {column} like {__value_quote(f"%{text}%")}'
+def selectlike(table, column, text, conditions_dict=None, order_dict=None):
+    query = f'SELECT * FROM {table} WHERE '
+    if conditions_dict:
+        conditions = __convert_to_conditions(conditions_dict)
+        query += f'{conditions} and '
+    query+= f'{column} like {__value_quote(f"%{text}%")}'
     if order_dict:
         order = __convert_to_order(order_dict)
         query += f' ORDER BY {order}'

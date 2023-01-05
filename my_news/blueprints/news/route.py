@@ -1,9 +1,10 @@
-from flask import Blueprint, render_template, request, url_for, abort, jsonify
+from flask import Blueprint, render_template, request, url_for, abort, jsonify, json
 from .forms import *
 import my_news.db.models as models
 from my_news.utils.session import logged_user
 from my_news.utils.files import save_file, save_files, news_folder, delete_file, delete_files, replace_files, replace_file
 from my_news.utils.forms import set_values_to_form, get_values_from_form
+from my_news.utils.search import get_args
 
 
 news = Blueprint('news', __name__)
@@ -11,8 +12,7 @@ news = Blueprint('news', __name__)
 
 @news.route('/get', methods=['POST'])
 def getall():
-    # TODO: To end search
-    fetched = models.news.search('title', request.args.get('search'), {'key':'posted_time', 'reverse':False})
+    fetched = models.news.search(*get_args(request.form, 'title', 'posted_time'))
     if fetched:
         all_news = models.news.appendone_getall(fetched, models.users, ['user_login', 'login'])
         return jsonify({'html': render_template('modules/news_covers.html', news=all_news)})
@@ -32,7 +32,7 @@ def getone(id):
 
 @news.route('/get/<login>', methods=['POST'])
 def getusers(login):
-    fetched = models.news.getall({'key':'posted_time', 'reverse': False}, user_login=login)
+    fetched = models.news.search(*get_args(request.form, 'title', 'posted_time'), user_login=login)
     if fetched:
         all_news = models.news.appendone_getall(fetched, models.users, ['user_login', 'login'])
         return jsonify({'html': render_template('modules/news_covers.html', news=all_news)})

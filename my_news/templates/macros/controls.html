@@ -6,7 +6,7 @@
 <script src="{{ url_for('static', filename='scripts/history.js') }}"></script>
 <script src="{{ url_for('static', filename='scripts/previews.js') }}"></script>
 <script src="{{ url_for('static', filename='scripts/redirecting.js') }}"></script>
-<script src="{{ url_for('static', filename='scripts/styling.js') }}"></script>
+<script src="{{ url_for('static', filename='scripts/search.js') }}"></script>
 {% endmacro %}
 
 
@@ -51,30 +51,18 @@
 {% endmacro %}
 
 
-{% macro render_search_bar() %}
+{% macro render_search_bar(key) %}
 {# TODO: To end search #}
-<div class="input-group">
-    <div class="btn-group dropdown">
-        <!-- TODO: Implement dropdown collapsing https://stackoverflow.com/questions/25089297/avoid-dropdown-menu-close-on-click-inside -->
-        <button class="btn btn-outline-secondary my-2 my-sm-0" type="button" id="dropdownMenuButton"
-            data-bs-toggle="dropdown" data-bs-auto-close="outside" aria-haspopup="true" aria-expanded="false">
-            <i class="fa fa-filter"></i>
+    <form class="input-group">
+        <label class="btn btn-outline-secondary my-2 my-sm-0">
+            <input name="reverse" type="checkbox" class="btn-check" onclick="changeIcon(this, ['fa-sort-amount-desc', 'fa-sort-amount-asc'])">
+            <i class="fa fa-sort-amount-desc"></i>
+        </label>
+        <input name="search" class="form-control mr-sm-2" type="search" placeholder="{{ key }}" aria-label="Search">
+        <button class="btn btn-outline-secondary my-2 my-sm-0" type="submit">
+            <i class="fa fa-search"></i>
         </button>
-        <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-            <form id="filter_form">
-                <label class="btn w-100">
-                    <input type="checkbox" class="btn-check" onclick="changeIcon(this, ['fa-sort-amount-asc', 'fa-sort-amount-desc'])">
-                    <i class="fa fa-sort-amount-asc"></i>
-                    Order
-                </label>
-            </form>
-        </div>
-    </div>
-    <input name="search" class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search">
-    <button class="btn btn-outline-secondary my-2 my-sm-0">
-        <i class="fa fa-search"></i>
-    </button>
-</div>
+    </form>
 {% endmacro %}
 
 
@@ -186,8 +174,21 @@
         <a class="navbar-brand" href="{{ url_for('pages.news') }}">
             <i class="fa fa-list-alt fa-2x"></i>
         </a>
+        {% set route = request.path[1:] %}
+        {% set slash_index = route.rfind('/') %}
+        {% set param = route[slash_index + 1:] %}
+        {% if slash_index > -1 %}
+            {% set route = route[0:route.rfind('/')] %}
+        {% endif %}
+        {% if route == 'about' or (route == 'news' and slash_index > -1) %}
+            {% set placeholder = 'Body' %}
+        {% elif route in ('news', 'history', 'user', 'account') %}
+            {% set placeholder = 'Title' %}
+        {% elif route == 'users' %}
+            {% set placeholder = 'Login' %}
+        {% endif %}
         <div class="d-lg-none">
-            {{ render_search_bar() }}
+            {{ render_search_bar(placeholder) }}
         </div>
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent"
             aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
@@ -196,23 +197,22 @@
         <div class="collapse navbar-collapse justify-content-between" id="navbarSupportedContent">
             <ul class="navbar-nav">
                 <!-- TODO: To refactor -->
-                {% set route = request.path %}
                 <li class="nav-item">
-                    {% if route == '/news' %}
+                    {% if route == 'news' %}
                         <a class="nav-link active" href="{{ url_for('pages.news') }}">News</a>
                     {% else %}
                         <a class="nav-link" href="{{ url_for('pages.news') }}">News</a>
                     {% endif %}
                 </li>
                 <li class="nav-item">
-                    {% if route == '/users' %}
+                    {% if route in ('users', 'account') %}
                         <a class="nav-link active" href="{{ url_for('pages.users') }}">Users</a>
                     {% else %}
                         <a class="nav-link" href="{{ url_for('pages.users') }}">Users</a>
                     {% endif %}
                 </li>
                 <li class="nav-item">
-                    {% if route == '/about' %}
+                    {% if route == 'about' %}
                         <a class="nav-link active" href="{{ url_for('pages.about') }}">About</a>
                     {% else %}
                         <a class="nav-link" href="{{ url_for('pages.about') }}">About</a>
@@ -220,7 +220,7 @@
                 </li>
             </ul>
             <div class="d-none d-lg-block">
-                {{ render_search_bar() }}
+                {{ render_search_bar(placeholder) }}
             </div>
             <ul class="navbar-nav">
                 {% if logged_user %}

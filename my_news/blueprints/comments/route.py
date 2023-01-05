@@ -1,8 +1,9 @@
-from flask import Blueprint, render_template, redirect, request, url_for, abort, jsonify
+from flask import Blueprint, render_template, request, jsonify
 from .forms import *
 import my_news.db.models as models
 from my_news.utils.forms import set_values_to_form, get_values_from_form
 from my_news.utils.session import logged_user
+from my_news.utils.search import get_args
 
 
 comments = Blueprint('comments', __name__)
@@ -10,9 +11,9 @@ comments = Blueprint('comments', __name__)
 
 @comments.route('/<int:news_id>', methods=['POST'])
 def getall(news_id):
-    news_comments = models.comments.getall({'key': 'posted_time', 'reverse': False}, news_id=news_id)
-    if news_comments:
-        appended_comments = models.comments.appendone_getall(news_comments, models.users, ['user_login', 'login'])
+    fetched = models.comments.search(*get_args(request.form, 'body', 'posted_time'), news_id=news_id)
+    if fetched:
+        appended_comments = models.comments.appendone_getall(fetched, models.users, ['user_login', 'login'])
         return jsonify({'html': render_template('modules/comments.html', comments=appended_comments)})
     return jsonify({'html': render_template('modules/error.html', message='No comments yet')})
 

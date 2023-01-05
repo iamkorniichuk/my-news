@@ -1,9 +1,9 @@
-from flask import Blueprint, render_template, redirect, url_for, request, jsonify, abort
+from flask import Blueprint, render_template, request, jsonify
 from my_news.utils.session import logged_user
 from my_news.utils.forms import set_values_to_form, get_values_from_form
 import my_news.db.models as models
-from my_news.utils.files import users_folder
 from .forms import *
+from my_news.utils.search import get_args
 
 
 reviews = Blueprint('reviews', __name__)
@@ -11,7 +11,7 @@ reviews = Blueprint('reviews', __name__)
 
 @reviews.route('/getall', methods=['POST'])
 def getall():
-    fetched = models.reviews.getall({'key':'stars', 'reverse': False})
+    fetched = models.reviews.search(*get_args(request.form, 'body', 'stars'))
     if fetched:
         all_reviews = models.reviews.appendone_getall(fetched, models.users, ['user_login', 'login'])
         return jsonify({'html': render_template('modules/reviews.html', reviews=all_reviews)})

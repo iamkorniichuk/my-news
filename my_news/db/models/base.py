@@ -70,10 +70,10 @@ class BaseModel:
 
 
     @convert_filenames_to_path
-    def search(self, key, text, order=None):
+    def search(self, key, text, order=None, **kwargs):
         if text:
-            return core.selectlike(self.table, key, text, order)
-        return self.getall(order)
+            return core.selectlike(self.table, key, text, kwargs, order)
+        return self.getall(order, **kwargs)
 
 
     def count(self, **kwargs):

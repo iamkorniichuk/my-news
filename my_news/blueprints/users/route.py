@@ -1,9 +1,10 @@
 from flask import Blueprint, render_template, redirect, url_for, jsonify, request
 from .forms import *
 from my_news.utils.session import logged_user
-from my_news.utils.files import replace_file, delete_file, save_file, users_folder
+from my_news.utils.files import replace_file, delete_file, users_folder
 from my_news.utils.forms import set_values_to_form, get_values_from_form
 import my_news.db.models as models
+from my_news.utils.search import get_args
 
 
 users = Blueprint('users', __name__)
@@ -11,7 +12,7 @@ users = Blueprint('users', __name__)
 
 @users.route('/get', methods=['POST'])
 def getall():
-    fetched = models.users.search('login', request.args.get('search'), {'key':'login', 'reverse':False})
+    fetched = models.users.search(*get_args(request.form, 'login', 'login'))
     all_users = map(append_count, fetched)
     return jsonify({'html': render_template('modules/users.html', users=all_users)})
 

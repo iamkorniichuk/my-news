@@ -15,7 +15,9 @@ app.config.from_mapping(**app_development)
 
 @app.errorhandler(Exception)
 def error(error):
-    return render_template('pages/error.html', title='Error', header='Something went wrong!', message=error.description)
+    if request.method == 'GET':
+        return render_template('pages/error.html', title='Error', header='Something went wrong!', message=error.description)
+    return render_template('modules/error.html', message=error.description)
 
     
 app.jinja_env.globals['SubmitField'] = SubmitField

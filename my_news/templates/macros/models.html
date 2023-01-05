@@ -84,7 +84,9 @@
             {{ user.description }}
         </p>
     </div>
-    {{ render_content_dropdown('user_section', 'users.edit', 'users.delete') }}
+    {% if logged_user.is_its_account(user.login) %}
+        {{ render_content_dropdown('user_section', 'users.edit', 'users.delete') }}
+    {% endif %}
 </div>
 {% endmacro %}
 
