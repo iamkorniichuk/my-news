@@ -93,16 +93,18 @@
 
 {% macro render_users(users) %}
     {% for row in users %}
-        <div class="card my-3">
-            <div class="card-body">
-                <h4 class="card-title">
-                    <div class="d-inline-flex justify-content-between w-100">
-                        {{ render_author(row.login, row.image, row.login) }}
-                    </div>
-                </h4>
-                <p class="card-text">News written: {{ row.news_count }}</p>
+        {% if row.news_count > 0 %}
+            <div class="card my-3">
+                <div class="card-body">
+                    <h4 class="card-title">
+                        <div class="d-inline-flex justify-content-between w-100">
+                            {{ render_author(row.login, row.image, row.login) }}
+                        </div>
+                    </h4>
+                    <p class="card-text">News written: {{ row.news_count }}</p>
+                </div>
             </div>
-        </div>
+        {% endif %}
     {% endfor %}
 {% endmacro %}
 

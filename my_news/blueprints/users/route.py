@@ -13,8 +13,10 @@ users = Blueprint('users', __name__)
 @users.route('/get', methods=['POST'])
 def getall():
     fetched = models.users.search(*get_args(request.form, 'login', 'login'))
-    all_users = map(append_count, fetched)
-    return jsonify({'html': render_template('modules/users.html', users=all_users)})
+    if fetched:
+        all_users = map(append_count, fetched)
+        return jsonify({'html': render_template('modules/users.html', users=all_users)})
+    return  jsonify({'html': render_template('modules/error.html', message='No users yet')})
 
 
 def append_count(user):
