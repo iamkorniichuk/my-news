@@ -6,6 +6,7 @@
 <script src="{{ url_for('static', filename='scripts/history.js') }}"></script>
 <script src="{{ url_for('static', filename='scripts/previews.js') }}"></script>
 <script src="{{ url_for('static', filename='scripts/redirecting.js') }}"></script>
+<script src="{{ url_for('static', filename='scripts/styling.js') }}"></script>
 {% endmacro %}
 
 
@@ -52,12 +53,28 @@
 
 {% macro render_search_bar() %}
 {# TODO: To end search #}
-<form class="form-inline" role="search">
-    <div class="input-group">
-        <input name="search" class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search">
-        <button class="btn btn-outline-secondary my-2 my-sm-0" type="submit">Search</button>
+<div class="input-group">
+    <div class="btn-group dropdown">
+        <!-- TODO: Implement dropdown collapsing https://stackoverflow.com/questions/25089297/avoid-dropdown-menu-close-on-click-inside -->
+        <button class="btn btn-outline-secondary my-2 my-sm-0" type="button" id="dropdownMenuButton"
+            data-bs-toggle="dropdown" data-bs-auto-close="outside" aria-haspopup="true" aria-expanded="false">
+            <i class="fa fa-filter"></i>
+        </button>
+        <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+            <form id="filter_form">
+                <label class="btn w-100">
+                    <input type="checkbox" class="btn-check" onclick="changeIcon(this, ['fa-sort-amount-asc', 'fa-sort-amount-desc'])">
+                    <i class="fa fa-sort-amount-asc"></i>
+                    Order
+                </label>
+            </form>
+        </div>
     </div>
-</form>
+    <input name="search" class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search">
+    <button class="btn btn-outline-secondary my-2 my-sm-0">
+        <i class="fa fa-search"></i>
+    </button>
+</div>
 {% endmacro %}
 
 
@@ -81,8 +98,9 @@
 
 {% macro render_content_dropdown(section, edit, delete, redirect) %}
     <div class="dropdown">
-        <button class="btn dropdown-toggle btn-sm" type="button" id="dropdownMenuButton"
+        <button class="btn btn-sm" type="button" id="dropdownMenuButton"
             data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+            <i class="fa fa-pencil"></i>
         </button>
         <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
             <button class="btn w-100" onclick="modal.onSuccessCheck = {{ section }}.request.bind({{ section }}); modal.url = '{{ url_for( edit, **kwargs ) }}'; modal.request()">Edit</button>
@@ -178,23 +196,23 @@
         <div class="collapse navbar-collapse justify-content-between" id="navbarSupportedContent">
             <ul class="navbar-nav">
                 <!-- TODO: To refactor -->
-                {% set blueprint = request.blueprint %}
+                {% set route = request.path %}
                 <li class="nav-item">
-                    {% if blueprint == 'news' %}
+                    {% if route == '/news' %}
                         <a class="nav-link active" href="{{ url_for('pages.news') }}">News</a>
                     {% else %}
                         <a class="nav-link" href="{{ url_for('pages.news') }}">News</a>
                     {% endif %}
                 </li>
                 <li class="nav-item">
-                    {% if blueprint == 'users' %}
+                    {% if route == '/users' %}
                         <a class="nav-link active" href="{{ url_for('pages.users') }}">Users</a>
                     {% else %}
                         <a class="nav-link" href="{{ url_for('pages.users') }}">Users</a>
                     {% endif %}
                 </li>
                 <li class="nav-item">
-                    {% if blueprint == 'about' %}
+                    {% if route == '/about' %}
                         <a class="nav-link active" href="{{ url_for('pages.about') }}">About</a>
                     {% else %}
                         <a class="nav-link" href="{{ url_for('pages.about') }}">About</a>
@@ -206,6 +224,8 @@
             </div>
             <ul class="navbar-nav">
                 {% if logged_user %}
+                <!-- TODO: add info -->
+                <li>
                     {{ render_account_dropdown(logged_user.info.image) }}
                 </li>
                 {% else %}

@@ -16,7 +16,6 @@ def login():
         if models.users.auth(login, password):
             logged_user.info = login
             return redirect(url_for('pages.news'))
-            # TODO: Render through ajax?
     return render_template('pages/auth.html', title='Log In', form=form)
 
 
