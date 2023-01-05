@@ -1,4 +1,4 @@
-from wtforms import SubmitField, FileField, MultipleFileField
+from wtforms import SubmitField, RadioField, MultipleFileField
 from wtforms.csrf.core import CSRFTokenField
 
 
@@ -8,7 +8,10 @@ service_fields = (CSRFTokenField, SubmitField)
 def set_values_to_form(form, values):
     for field in form:
         try:
-            field.data = values[field.name]
+            if isinstance(field, RadioField):
+                field.data = int(values[field.name])
+            else:
+                field.data = values[field.name]
         except:
             continue
 

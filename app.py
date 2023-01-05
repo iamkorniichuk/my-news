@@ -1,5 +1,5 @@
 from flask import Flask, request, render_template
-from wtforms import SubmitField, MultipleFileField
+from wtforms import SubmitField, MultipleFileField, RadioField
 from flask_wtf.file import FileField
 from wtforms.csrf.core import CSRFTokenField
 from my_news.configs import *
@@ -24,6 +24,7 @@ app.jinja_env.globals['SubmitField'] = SubmitField
 app.jinja_env.globals['CSRFTokenField'] = CSRFTokenField
 app.jinja_env.globals['MultipleFileField'] = MultipleFileField
 app.jinja_env.globals['FileField'] = FileField
+app.jinja_env.globals['RadioField'] = RadioField
 app.jinja_env.globals['isinstance'] = isinstance
 app.jinja_env.globals['logged_user'] = logged_user
 app.jinja_env.globals['request'] = request

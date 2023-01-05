@@ -9,3 +9,27 @@ textarea{
 .carousel{
     overflow: hidden
 }
+
+.checked,
+.checked::before{
+    display: none;
+}
+
+.active .checked,
+.active .checked::before {
+    display: inline-block;
+}
+
+.active .unchecked {
+    display: none;
+}
+
+.btn-plain,
+.btn-plain.active,
+.btn-plain:focus,
+.btn-plain:active {
+    border: none;
+    box-shadow: none;
+    outline: none;
+    background: none;
+}

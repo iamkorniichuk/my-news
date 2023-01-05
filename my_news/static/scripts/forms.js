@@ -13,7 +13,6 @@ class Form extends Section{
         let obj = this
         let onSuccessStatus = this.onSuccess
         let form = this.getSection().firstElementChild
-        console.log(form)
         $.ajax({
             async: false,
             url: obj.url,
