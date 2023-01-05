@@ -6,10 +6,6 @@ textarea{
     height: 100px;
 }
 
-.carousel{
-    overflow: hidden
-}
-
 .checked,
 .checked::before{
     display: none;

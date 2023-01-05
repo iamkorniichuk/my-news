@@ -41,7 +41,8 @@ def news_bar():
         count.append(models.news.count(user_login=user['login']))
 
     plot.bar(authors, count)
-    plot.yticks(numpy.arange(min(count), max(count) + 1, 1))
+    if count:
+        plot.yticks(numpy.arange(min(count), max(count) + 1, 1))
     plot.title('News count')
     plot.xlabel('Authors')
     plot.ylabel('Counts')
@@ -64,7 +65,8 @@ def comments_bar():
             count.append(amount)
 
     plot.bar(authors, count)
-    plot.yticks(numpy.arange(min(count), max(count) + 1, 1))
+    if count:
+        plot.yticks(numpy.arange(min(count), max(count) + 1, 1))
     plot.title('Comments count')
     plot.xlabel('Authors')
     plot.ylabel('Counts')

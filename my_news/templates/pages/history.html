@@ -8,7 +8,6 @@
         <button class="btn btn-danger" onclick="clearHistory(); render_history()">Delete my whole history</button>
     </div>
     <div id="history_section"></div>
-    <!-- TODO: Change dropdown to delete from history -->
     <script>
         function render_history(){
             history_section.url = '{{ url_for("history.get") }}'

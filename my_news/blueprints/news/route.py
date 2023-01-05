@@ -26,7 +26,7 @@ def getone(id):
     if all_news['images']:
         all_news['images'].insert(0, all_news['cover'])
     else:
-        all_news['images'] = None
+        del all_news['images']
     return jsonify({'html': render_template('modules/one_news.html', news=all_news)})
 
 
@@ -50,7 +50,10 @@ def add():
         values = get_values_from_form(form)
         values['user_login'] = logged_user.info['login']
         values['cover'] = save_file(values['cover'], news_folder())
-        values['images'] = save_files(values['images'], news_folder())
+        if values['images']:
+            values['images'] = save_files(values['images'], news_folder())
+        else:
+            del values['images']
         models.news.add(**values)
         return jsonify({'status': True})
     return jsonify({'html': render_template('modules/form.html', form=form, object='news_form')})

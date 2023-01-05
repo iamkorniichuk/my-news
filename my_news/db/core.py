@@ -127,5 +127,8 @@ def __set_bracket(str):
     return f'({str})'
 
 
-def __value_quote(str):
-    return f'"{str}"'
+def __value_quote(text):
+    if isinstance(text, str):
+        text = text.replace('"', '\\"')
+        text = text.replace("'", "\\'")
+    return f'"{text}"'

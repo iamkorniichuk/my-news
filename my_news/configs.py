@@ -1,10 +1,10 @@
-import os
+import secrets
 from .instance.config import *
 
-# TODO: Secure SECRET_KEY
+
 app_development = {'DEBUG': True,
                 'UPLOAD_FOLDER': 'static/' + 'files/',
-                'SECRET_KEY': 'ha'}
+                'SECRET_KEY': secrets.token_hex(16)}
 
 
 database_development = {'host': 'localhost',

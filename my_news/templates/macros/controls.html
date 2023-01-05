@@ -31,11 +31,11 @@
     <div class="carousel-inner">
     {% for image in images %}
         {% if loop.index0 == 0 %}
-            <div class="carousel-item active">
+            <div class="carousel-item ratio ratio-4x3 active">
         {% else %}
-            <div class="carousel-item">
+            <div class="carousel-item ratio ratio-4x3">
         {% endif %}
-            <img src="{{ image }}" class="d-block w-100" alt="Image">
+            <img src="{{ image }}" class="d-block w-100" alt="Image" style="object-fit: cover;">
         </div>
     {% endfor %}
     </div>

@@ -2,19 +2,19 @@
 
 
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" class="h-100">
 <head>
     <meta charset="UTF-8">
     <title>{{ title }}</title>
     {{ render_scripts() }}
     {{ render_stylesheets() }}
 </head>
-<body>
+<body class="d-flex flex-column h-100">
     {{ render_navbar() }}
     {% block content %}
     {% endblock content %}
     {{ render_modal() }}
-    <footer class="page-footer bg-light p-5 w-100">
+    <footer class="footer mt-auto bg-light p-5 w-100">
         <div class="text-center">
             Vitalii Korniichuk ©
         </div>
