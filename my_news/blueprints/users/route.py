@@ -1,3 +1,4 @@
+import json
 from flask import Blueprint, render_template, redirect, url_for, jsonify, request
 from .forms import *
 from my_news.utils.session import logged_user
@@ -10,11 +11,26 @@ from my_news.utils.search import get_args
 users = Blueprint('users', __name__)
 
 
-@users.route('/get', methods=['POST'])
+@users.route('/getall', methods=['POST'])
 def getall():
     fetched = models.users.search(*get_args(request.form, 'login', 'login'))
     if fetched:
+        reverse = False
+        order_by = 'news_count'
+
+        values = request.form.get('search')
+        if values:
+            values = json.loads(values)
+            if 'reverse' in values.keys():
+                reverse = True if values['reverse'] == 'on' else False
+            if 'search' in values.keys():
+                if values['search']:
+                    order_by = 'login'
         all_users = map(append_count, fetched)
+        all_users = sorted(all_users, key=lambda d: d[order_by]) 
+        if reverse:
+            all_users.reverse()
+
         return jsonify({'html': render_template('modules/users.html', users=all_users)})
     return  jsonify({'html': render_template('modules/error.html', message='No users yet')})
 

@@ -1,3 +1,4 @@
+import json
 from flask import Blueprint, render_template, request, jsonify
 from my_news.utils.session import logged_user
 from my_news.utils.forms import set_values_to_form, get_values_from_form
@@ -13,6 +14,21 @@ reviews = Blueprint('reviews', __name__)
 def getall():
     fetched = models.reviews.search(*get_args(request.form, 'body', 'stars'))
     if fetched:
+        reverse = False
+        order_by = 'stars'
+
+        values = request.form.get('search')
+        if values:
+            values = json.loads(values)
+            if 'reverse' in values.keys():
+                reverse = True if values['reverse'] == 'on' else False
+            if 'search' in values.keys():
+                if values['search']:
+                    order_by = 'body'
+        all_reviews = sorted(fetched, key=lambda d: d[order_by]) 
+        if reverse:
+            all_reviews.reverse()
+
         all_reviews = models.reviews.appendone_getall(fetched, models.users, ['user_login', 'login'])
         return jsonify({'html': render_template('modules/reviews.html', reviews=all_reviews)})
     return jsonify({'html': render_template('modules/error.html', message='No reviews yet')})
