@@ -27,6 +27,7 @@ def getfull():
     info = []
     info.append(news_bar())
     info.append(comments_bar())
+    info.append(reviews_bar())
     return jsonify({'html': render_template('modules/info_full.html', info=info)})
 
 
@@ -70,6 +71,27 @@ def comments_bar():
     plot.title('Comments count')
     plot.xlabel('Authors')
     plot.ylabel('Counts')
+
+    temp = BytesIO()
+    figure.savefig(temp, format='png')
+    return base64.b64encode(temp.getvalue()).decode('utf-8')
+
+
+def reviews_bar():
+    figure = plot.figure()
+
+    stars_range = [1, 2, 3, 4, 5]
+    count = []
+    for i in stars_range:
+        amount = models.reviews.count(stars=i)
+        count.append(amount)
+
+    plot.bar(stars_range, count)
+    if count:
+        plot.yticks(numpy.arange(min(count), max(count) + 1, 1))
+    plot.title('Star rating')
+    plot.xlabel('Stars')
+    plot.ylabel('Count')
 
     temp = BytesIO()
     figure.savefig(temp, format='png')
