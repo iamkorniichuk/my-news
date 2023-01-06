@@ -7,7 +7,7 @@
             <div class="col-lg-4">
                 <div class="card h-100">
                     <img class="card-img-top"
-                        src="{{ row.cover }}" alt="Cover">
+                        src="{{ row.cover }}" alt="Cover" style="object-fit: cover;">
                     <div class="card-img-overlay clickable" onclick="redirectToNews('{{ row.id }}')">
                         <div class="card-title text-white">
                             {{ render_author(row.user_login, row.image) }}
