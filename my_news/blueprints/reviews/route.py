@@ -25,9 +25,7 @@ def getall():
             if 'search' in values.keys():
                 if values['search']:
                     order_by = 'body'
-        all_reviews = sorted(fetched, key=lambda d: d[order_by]) 
-        if reverse:
-            all_reviews.reverse()
+        all_reviews = sorted(fetched, key=lambda d: d[order_by], reverse=reverse) 
 
         all_reviews = models.reviews.appendone_getall(fetched, models.users, ['user_login', 'login'])
         return jsonify({'html': render_template('modules/reviews.html', reviews=all_reviews)})

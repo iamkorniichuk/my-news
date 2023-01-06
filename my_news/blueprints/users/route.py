@@ -27,9 +27,7 @@ def getall():
                 if values['search']:
                     order_by = 'login'
         all_users = map(append_count, fetched)
-        all_users = sorted(all_users, key=lambda d: d[order_by]) 
-        if reverse:
-            all_users.reverse()
+        all_users = sorted(all_users, key=lambda d: d[order_by], reverse=not reverse) 
 
         return jsonify({'html': render_template('modules/users.html', users=all_users)})
     return  jsonify({'html': render_template('modules/error.html', message='No users yet')})
