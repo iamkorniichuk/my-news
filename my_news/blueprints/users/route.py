@@ -64,7 +64,6 @@ def edit():
 @users.route('/delete', methods=['POST'])
 @logged_user.login_required
 def delete():
-    if logged_user()['image']:
-        delete_file(logged_user()['image'], users_folder())
-    models.users.delete(logged_user()['login'])
+    delete_file(logged_user.info['image'])
+    models.users.delete(logged_user.info['login'])
     return redirect(url_for('auth.logout'), code=307)

@@ -37,26 +37,27 @@ def save_file(file, folder):
         return name
 
 
-def delete_files(files, folder):
+def delete_files(files):
     for file in files:
-        delete_file(file, folder)
+        delete_file(file)
 
 
-def delete_file(file, folder):
+def delete_file(file):
     if file:
-        path = get_full_path(folder + file)
+        path = get_full_path(file)
+        print(f'{path}:', os.path.exists(path))
         if os.path.exists(path):
             os.chmod(path, 0o777)
             os.remove(path)
 
 
 def replace_files(olds, news, folder):
-    delete_files(olds, folder)
+    delete_files(olds)
     return save_files(news, folder)
 
 
 def replace_file(old, new, folder):
-    delete_file(old, folder)
+    delete_file(old)
     return save_file(new, folder)
 
 

@@ -1,4 +1,4 @@
-from flask import Blueprint, render_template, request, url_for, abort, jsonify, json
+from flask import Blueprint, render_template, request, url_for, abort, jsonify
 from .forms import *
 import my_news.db.models as models
 from my_news.utils.session import logged_user
@@ -89,10 +89,10 @@ def edit(id):
 @news.route('/delete/<int:id>', methods=['POST'])
 @logged_user.admin_required
 def delete(id):
-    news = models.news.getone(id)
-    if logged_user.is_its_account(news['user_login']):
-        delete_file(news['cover'], news_folder())
-        delete_files(news['images'], news_folder())
+    one_news = models.news.getone(id)
+    if logged_user.is_its_account(one_news['user_login']):
+        delete_file(one_news['cover'])
+        delete_files(one_news['images'])
         models.news.delete(id)
         return jsonify({'status': True})
     return jsonify({'status': False})
