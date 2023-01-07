@@ -36,5 +36,4 @@ def signup():
 @logged_user.login_required
 def logout():
     del logged_user.info
-    # TODO: Redirect
     return redirect(url_for('auth.login'))

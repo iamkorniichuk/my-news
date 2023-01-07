@@ -66,4 +66,5 @@ def edit():
 def delete():
     delete_file(logged_user.info['image'])
     models.users.delete(logged_user.info['login'])
-    return redirect(url_for('auth.logout'), code=307)
+    del logged_user.info
+    return jsonify({'status': True})
